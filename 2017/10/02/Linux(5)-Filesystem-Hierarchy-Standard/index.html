@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简单来讲   /bin 二进制可执行命令     /dev 设备特殊文件   /etc 系统管理和配置文件   /etc/rc.d 启动的配置文件和脚本   /home 用户主目录的基点,   /lib 标准程序设计库   /sbin 超级管理命令   /tmp 公共的临时文件存储点   /root 系统管理员的主目录   /mnt 系统提供这个目录是让用户临时挂载其他的文件系统   /lost+">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux中各个目录的含义和作用">
+<meta property="og:url" content="http://limbowandering.com/2017/10/02/Linux(5)-Filesystem-Hierarchy-Standard/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="简单来讲   /bin 二进制可执行命令     /dev 设备特殊文件   /etc 系统管理和配置文件   /etc/rc.d 启动的配置文件和脚本   /home 用户主目录的基点,   /lib 标准程序设计库   /sbin 超级管理命令   /tmp 公共的临时文件存储点   /root 系统管理员的主目录   /mnt 系统提供这个目录是让用户临时挂载其他的文件系统   /lost+">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-02T11:24:18.319Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux中各个目录的含义和作用">
+<meta name="twitter:description" content="简单来讲   /bin 二进制可执行命令     /dev 设备特殊文件   /etc 系统管理和配置文件   /etc/rc.d 启动的配置文件和脚本   /home 用户主目录的基点,   /lib 标准程序设计库   /sbin 超级管理命令   /tmp 公共的临时文件存储点   /root 系统管理员的主目录   /mnt 系统提供这个目录是让用户临时挂载其他的文件系统   /lost+">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/10/02/Linux(5)-Filesystem-Hierarchy-Standard/"/>
+
+
+
+
+
+  <title>Linux中各个目录的含义和作用 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/10/02/Linux(5)-Filesystem-Hierarchy-Standard/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux中各个目录的含义和作用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-02T00:00:00+08:00">
+                2017-10-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="简单来讲"><a href="#简单来讲" class="headerlink" title="简单来讲"></a>简单来讲</h2><table>
+<thead>
+<tr>
+<th style="text-align:center">/bin</th>
+<th style="text-align:center">二进制可执行命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">/dev</td>
+<td style="text-align:center">设备特殊文件</td>
+</tr>
+<tr>
+<td style="text-align:center">/etc</td>
+<td style="text-align:center">系统管理和配置文件</td>
+</tr>
+<tr>
+<td style="text-align:center">/etc/rc.d</td>
+<td style="text-align:center">启动的配置文件和脚本</td>
+</tr>
+<tr>
+<td style="text-align:center">/home</td>
+<td style="text-align:center">用户主目录的基点,</td>
+</tr>
+<tr>
+<td style="text-align:center">/lib</td>
+<td style="text-align:center">标准程序设计库</td>
+</tr>
+<tr>
+<td style="text-align:center">/sbin</td>
+<td style="text-align:center">超级管理命令</td>
+</tr>
+<tr>
+<td style="text-align:center">/tmp</td>
+<td style="text-align:center">公共的临时文件存储点</td>
+</tr>
+<tr>
+<td style="text-align:center">/root</td>
+<td style="text-align:center">系统管理员的主目录</td>
+</tr>
+<tr>
+<td style="text-align:center">/mnt</td>
+<td style="text-align:center">系统提供这个目录是让用户临时挂载其他的文件系统</td>
+</tr>
+<tr>
+<td style="text-align:center">/lost+found</td>
+<td style="text-align:center">平时为空. 系统非正常关机而留下”无家可归”的文件</td>
+</tr>
+<tr>
+<td style="text-align:center">/proc</td>
+<td style="text-align:center">虚拟的目录, 是系统内存的映射.可直接访问来获得系统信息</td>
+</tr>
+<tr>
+<td style="text-align:center">/var</td>
+<td style="text-align:center">某些大文件的溢出区,比方说各种服务的日志文件</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr</td>
+<td style="text-align:center">最庞大的目录, 要用到的应用程序和文件几乎都在这个目录</td>
+</tr>
+</tbody>
+</table>
+<p>usr这个目录包含:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">/usr/x11R6</th>
+<th style="text-align:center">存放x window的目录</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">/usr/bin</td>
+<td style="text-align:center">众多的应用程序</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/sbin</td>
+<td style="text-align:center">超级用户的一些管理程序</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/doc</td>
+<td style="text-align:center">Linux文档</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/include</td>
+<td style="text-align:center">Linux下开发和编译应用程序所需要的头文件</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/lib</td>
+<td style="text-align:center">常用的动态链接库和软件波的配置文件</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/man</td>
+<td style="text-align:center">帮助文档</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/src</td>
+<td style="text-align:center">源代码, Linux内核的源代码就在/usr/src/linux里</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/local/bin</td>
+<td style="text-align:center">本地增加的命令</td>
+</tr>
+<tr>
+<td style="text-align:center">/usr/locan/bin</td>
+<td style="text-align:center">本地增加的库根文件系统</td>
+</tr>
+</tbody>
+</table>
+<h2 id="FHS"><a href="#FHS" class="headerlink" title="FHS"></a>FHS</h2><p>Linux目录配置的依据-FHS(Filesystem-Hierarchy-Standard).</p>
+<p>根据FHS(<a href="http://www.pathname.com/fhs)的官方文件,他们的主要目的是希望让使用者可以了解到已安装软件通常放置于那个目录下，所以他们希望独立的软件开发商、操作系统制作者、以及想要维护系统的用户，都能够遵循FHS的标准。也就是说，FHS的重点在于规范每个特定的目录下应该要放置什么样子的数据而已。这样做好处非常多，因为Linux操作系统就能够在既有的面貌下(目录架构不变)发展出开发者想要的独特风格。事实上，FHS是根据过去的经验一直再持续的改版的，FHS依据文件系统使用的频繁与否与是否允许使用者随意更动，而将目录定义成为四种交互作用的形态，用表格来说有点像底下这样：" target="_blank" rel="noopener">http://www.pathname.com/fhs)的官方文件,他们的主要目的是希望让使用者可以了解到已安装软件通常放置于那个目录下，所以他们希望独立的软件开发商、操作系统制作者、以及想要维护系统的用户，都能够遵循FHS的标准。也就是说，FHS的重点在于规范每个特定的目录下应该要放置什么样子的数据而已。这样做好处非常多，因为Linux操作系统就能够在既有的面貌下(目录架构不变)发展出开发者想要的独特风格。事实上，FHS是根据过去的经验一直再持续的改版的，FHS依据文件系统使用的频繁与否与是否允许使用者随意更动，而将目录定义成为四种交互作用的形态，用表格来说有点像底下这样：</a></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>shareable</th>
+<th>unshareable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>static</td>
+<td>/usr(软件放置处)</td>
+<td>/etc(配置文件)</td>
+</tr>
+<tr>
+<td></td>
+<td>/opt(第三方协力软件)</td>
+<td>/boot(开机与核心档)</td>
+</tr>
+<tr>
+<td>variable</td>
+<td>/var/mail(使用者邮件信箱)</td>
+<td>/var/run(程序相关)</td>
+</tr>
+<tr>
+<td></td>
+<td>/var/spool/news(新闻组)</td>
+<td>/var/lock(程序相关)</td>
+</tr>
+</tbody>
+</table>
+<p>这四种类型:</p>
+<ul>
+<li>Shareable: 可以分享给其他系统挂载使用的目录, 所以包括执行文件与用户的邮件等数据, 是能够分享给网络上其他主机挂载用的目录.</li>
+<li>unshareable: 自己机器上面运作的装置文件或者是与程序有关的socket文件等, 由于与自身</li>
+<li>static: 有些数据是不会变动的, 跟随着distribution而不变动. 例如函式库,文件说明文件,系统管理员所管理的主机服务配置文件等等.</li>
+<li>variable: 经常改变的数据, 例如登录文件, 一般用户可自行收受的新闻组.</li>
+</ul>
+<p>事实上, FHS针对目录树架构仅定义出三层目录底下应该放置什么数据而已, 分别是底下这三个目录的定义:</p>
+<ul>
+<li>/ : 与开机系统有关. (root, 根目录, 不是系统管理员的root)</li>
+<li>/usr( unix software resource): 与软件安装/执行有关,</li>
+<li>/var(variable): 与系统运作过程有关.</li>
+</ul>
+<h3 id="根目录的意义与内容"><a href="#根目录的意义与内容" class="headerlink" title="根目录的意义与内容"></a>根目录的意义与内容</h3><p>FHS标准建议：根目录(/)所在分割槽应该越小越好，且应用程序所安装的软件最好不要与根目录放在同一个分割槽内，保持根目录越小越好。如此不但效能较佳，根目录所在的文件系统也较不容易发生问题。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">目录</th>
+<th style="text-align:center">应放置文件内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">/bin</td>
+<td style="text-align:center">系统有很多放置执行文件的目录，但/bin比较特殊。因为/bin放置的是在单人维护模式下还能够被操作的指令。在/bin底下的指令可以被root与一般账号所使用，主要有：cat, chmod, chown, date, mv, mkdir, cp, bash等等常用的指令。</td>
+</tr>
+<tr>
+<td style="text-align:center">/boot</td>
+<td style="text-align:center">这个目录主要在放置开机会使用到的文件, 包括Linux核心文件 以及开机选单与开机所需配置文件等等。Linux kernel常用的档名为：vmlinuz，如果使用的是grub这个开机管理程序，则还会存在/boot/grub/这个目录喔！</td>
+</tr>
+<tr>
+<td style="text-align:center">/dev</td>
+<td style="text-align:center">在Linux系统上，任何装置与接口设备都是以文件的型态存在于这个目录当中的。你只要透过存取这个目录底下的某个文件，就等于存取某个装置啰～比要重要的文件有/dev/null, /dev/zero, /dev/tty, /dev/lp<em>, /dev/hd</em>, /dev/sd*等等</td>
+</tr>
+<tr>
+<td style="text-align:center">/etc</td>
+<td style="text-align:center">系统主要的配置文件几乎都放置在这个目录内，例如人员的账号密码文件、各种服务的启始档等等。一般来说，这个目录下的各文件属性是可以让一般使用者查阅的，但是只有root有权力修改。FHS建议不要放置可执行文件(binary)在这个目录中喔。比较重要的文件有：/etc/inittab, /etc/init.d/, /etc/modprobe.conf, /etc/X11/, /etc/fstab, /etc/sysconfig/ 等等。</td>
+</tr>
+<tr>
+<td style="text-align:center">/home</td>
+<td style="text-align:center">这是系统默认的用户家目录(home directory)。</td>
+</tr>
+<tr>
+<td style="text-align:center">/lib</td>
+<td style="text-align:center">系统的函式库非常的多, 而/lib放置的则是在开机时会用到的函式库, 以及在/bin或/sbin底下的指令呼叫的函式库而已. 尤其重要的是/lib/modules这个目录, 因为该目录会放置核心相关的模块(驱动程序).</td>
+</tr>
+<tr>
+<td style="text-align:center">/media</td>
+<td style="text-align:center">media是『媒体』的英文，顾名思义，这个/media底下放置的就是可移除的装置啦！包括软盘、光盘、DVD等等装置都暂时挂载于此。</td>
+</tr>
+<tr>
+<td style="text-align:center">/mnt</td>
+<td style="text-align:center">如果妳想要暂时挂载某些额外的装置，一般建议妳可以放置到这个目录中。在古早时候，这个目录的用途与/media相同啦！只是有了/media之后，这个目录就用来暂时挂载用了。</td>
+</tr>
+<tr>
+<td style="text-align:center">/opt</td>
+<td style="text-align:center">这个是给第三方协力软件放置的目录.  什么是第三方协力软件啊？举例来说，KDE这个桌面管理系统是一个独立的计划，不过他可以安装到Linux系统中，因此KDE的软件就建议放置到此目录下了。另外，如果妳想要自行安装额外的软件(非原本的distribution提供的)，那么也能够将你的软件安装到这里来。</td>
+</tr>
+<tr>
+<td style="text-align:center">/root</td>
+<td style="text-align:center">系统管理员root的家目录.</td>
+</tr>
+<tr>
+<td style="text-align:center">/sbin</td>
+<td style="text-align:center">Linux有非常多指令是用来设定系统环境的, 这些指令只有root才能够利用来设定系统. 其他用户最多只能用来查询而已.  放在/sbin底下的为开机过程中所需要的, 里面包括了开机, 修复,还原系统所需要的指令. 至于某些服务器软件程序, 一般则放置到/usr/sbin当中. 至于本机自行安装的软件所产生的系统执行文件, 则放置到/usr/local/sbin当中. 常见的指令包括: fdisk, fsck, ifconfig, init. mkfs等等.</td>
+</tr>
+<tr>
+<td style="text-align:center">/srv</td>
+<td style="text-align:center">srv可以视为 service的缩写, 是一些网络服务启动之后, 这些服务所需要取用的数据目录. 常见的服务例如WWW, FTP等,举例来说, WWW服务器需要的网页数据就可以放置在/srv/www/里面</td>
+</tr>
+<tr>
+<td style="text-align:center">/tmp</td>
+<td style="text-align:center">这是让一般使用者或者是正在执行的程序暂时放置文件的地方。这个目录是任何人都能够存取的，所以你需要定期的清理一下。当然，重要数据不可放置在此目录啊！因为FHS甚至建议在开机时，应该要将/tmp下的数据都删除唷！</td>
+</tr>
+<tr>
+<td style="text-align:center">/lost+found</td>
+<td style="text-align:center">这个目录是使用标准的ext2/ext3文件系统格式才会产生的一个目录，目的在于当文件系统发生错误时，将一些遗失的片段放置到这个目录下。这个目录通常会在分割槽的最顶层存在，例如你加装一颗硬盘于/disk中，那在这个系统下就会自动产生一个这样的目录『/disk/lost+found』</td>
+</tr>
+<tr>
+<td style="text-align:center">/proc</td>
+<td style="text-align:center">这个目录本身是一个 『虚拟文件系统(virtual filesystem)』喔！他放置的数据都是在内存当中，例如系统核心、行程信息(process)、周边装置的状态及网络状态等等。因为这个目录下的数据都是在内存当中，所以本身不占任何硬盘空间啊！比较重要的文件例如：/proc/cpuinfo,/proc/dma, /proc/interrupts, /proc/ioports, /proc/net/* 等等。</td>
+</tr>
+<tr>
+<td style="text-align:center">/sys</td>
+<td style="text-align:center">这个目录其实跟/proc非常类似，也是一个虚拟的文件系统，主要也是记录与核心相关的信息。包括目前已加载的核心模块与核心侦测到的硬件装置信息等等。这个目录同样不占硬盘容量喔！</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/01/Linux(3)-symbolic-link/" rel="next" title="Linux硬链接与软链接">
+                <i class="fa fa-chevron-left"></i> Linux硬链接与软链接
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/03/Linux(1)-Global-Regular-Expression-Print/" rel="prev" title="Linux grep命令">
+                Linux grep命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单来讲"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x7B80;&#x5355;&#x6765;&#x8BB2;" class="headerlink" title="&#x7B80;&#x5355;&#x6765;&#x8BB2;"></a>&#x7B80;&#x5355;&#x6765;&#x8BB2;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FHS"><span class="nav-number">2.</span> <span class="nav-text"><a href="#FHS" class="headerlink" title="FHS"></a>FHS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#根目录的意义与内容"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#&#x6839;&#x76EE;&#x5F55;&#x7684;&#x610F;&#x4E49;&#x4E0E;&#x5185;&#x5BB9;" class="headerlink" title="&#x6839;&#x76EE;&#x5F55;&#x7684;&#x610F;&#x4E49;&#x4E0E;&#x5185;&#x5BB9;"></a>&#x6839;&#x76EE;&#x5F55;&#x7684;&#x610F;&#x4E49;&#x4E0E;&#x5185;&#x5BB9;</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

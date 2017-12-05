@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="上次写的代码实在是太烂了, 而且因为应用场景是自己班级同学, 也没有考虑如果其他同学服务端格式有问题怎么办, 于是上周上课时候我先是半小时把链接错误排掉再半小时发现是有的同学衣服尺码写的X,L啊是小写的, 或者写错的之类的, 本地检查一遍不就好了. 所以应该是先写入文件, 再分析结果. 于是代码重写一下如下. 先继续说一下场景: 在班级机房中, 每个人开一个服务器线程, 当收到客户端发过来的get">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="班级同学最相似体型的计算2">
+<meta property="og:url" content="http://limbowandering.com/2017/10/30/Python(4)-most-similar-classmates2/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="上次写的代码实在是太烂了, 而且因为应用场景是自己班级同学, 也没有考虑如果其他同学服务端格式有问题怎么办, 于是上周上课时候我先是半小时把链接错误排掉再半小时发现是有的同学衣服尺码写的X,L啊是小写的, 或者写错的之类的, 本地检查一遍不就好了. 所以应该是先写入文件, 再分析结果. 于是代码重写一下如下. 先继续说一下场景: 在班级机房中, 每个人开一个服务器线程, 当收到客户端发过来的get">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-31T09:14:51.525Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="班级同学最相似体型的计算2">
+<meta name="twitter:description" content="上次写的代码实在是太烂了, 而且因为应用场景是自己班级同学, 也没有考虑如果其他同学服务端格式有问题怎么办, 于是上周上课时候我先是半小时把链接错误排掉再半小时发现是有的同学衣服尺码写的X,L啊是小写的, 或者写错的之类的, 本地检查一遍不就好了. 所以应该是先写入文件, 再分析结果. 于是代码重写一下如下. 先继续说一下场景: 在班级机房中, 每个人开一个服务器线程, 当收到客户端发过来的get">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/10/30/Python(4)-most-similar-classmates2/"/>
+
+
+
+
+
+  <title>班级同学最相似体型的计算2 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/10/30/Python(4)-most-similar-classmates2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">班级同学最相似体型的计算2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-30T00:00:00+08:00">
+                2017-10-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上次写的代码实在是太烂了, 而且因为应用场景是自己班级同学, 也没有考虑如果其他同学服务端格式有问题怎么办, 于是上周上课时候我先是半小时把链接错误排掉再半小时发现是有的同学衣服尺码写的X,L啊是小写的, 或者写错的之类的, 本地检查一遍不就好了. 所以应该是先写入文件, 再分析结果. 于是代码重写一下如下.</p>
+<p>先继续说一下场景: 在班级机房中, 每个人开一个服务器线程, 当收到客户端发过来的get请求时候, 返回自己的学号, 身高, 体重, 穿衣服尺码. 每个人写一个客户端, (机房IP地址是连续的40个)爬取同学们的信息, 然后本地计算哪两位同学体型最相似.</p>
+<p>server.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="comment">#import json</span></span><br><span class="line"></span><br><span class="line">HOST = <span class="string">'192.168.135.181'</span></span><br><span class="line">PORT = <span class="number">2333</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line"><span class="keyword">except</span> socket.error:</span><br><span class="line">    print(<span class="string">"socket created failed"</span>)</span><br><span class="line">    sys.exit()</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    s.bind((HOST,PORT))</span><br><span class="line"><span class="keyword">except</span> socket.error:</span><br><span class="line">    print(<span class="string">"Bind failed"</span>)</span><br><span class="line">    sys.exit()</span><br><span class="line"></span><br><span class="line">s.listen(<span class="number">31</span>)</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Server start at: %s:%s"</span> % (HOST,PORT))</span><br><span class="line">print(<span class="string">"Wait for connection"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">tcplink</span><span class="params">(connection,address)</span>:</span></span><br><span class="line">    print(<span class="string">"Accept new connection from %s:%s..."</span> % address)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">        data=connection.recv(<span class="number">1024</span>)</span><br><span class="line">        <span class="keyword">if</span> data.decode(<span class="string">'utf-8'</span>)==<span class="string">'exit'</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> data.decode(<span class="string">'utf-8'</span>)==<span class="string">'get'</span>:</span><br><span class="line">            connection.send(<span class="string">"1527406002;172;71;L"</span>.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            connection.send(<span class="string">"Received"</span>.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">    connection.close()</span><br><span class="line">    print(<span class="string">"connection from %s closed."</span> % connection)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> <span class="keyword">True</span>:</span><br><span class="line">    connection, address = s.accept()</span><br><span class="line">    t=threading.Thread(target=tcplink, args=(connection,address))</span><br><span class="line">    t.start()</span><br></pre></td></tr></table></figure>
+<p>同学们只要改掉里头的个人信息就行了.</p>
+<p>Student.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, number, height, weight, size)</span>:</span></span><br><span class="line">        self.number = number</span><br><span class="line">        self.height = height</span><br><span class="line">        self.weight = weight</span><br><span class="line">        self.size = size</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span><span class="params">(self)</span> -&gt; str:</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'number:'</span> + self.number + <span class="string">',height:'</span> + self.height + <span class="string">',weight:'</span> + self.weight + <span class="string">',size:'</span> + self.size</span><br></pre></td></tr></table></figure>
+<p>Utils.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> numpy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_from_file</span><span class="params">()</span>:</span></span><br><span class="line">    f = open(<span class="string">'data.txt'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    lines = []</span><br><span class="line">    line = f.readline()</span><br><span class="line">    <span class="keyword">while</span> line:</span><br><span class="line">        lines.append(line)</span><br><span class="line">        line = f.readline()</span><br><span class="line">    <span class="keyword">return</span> lines</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">calEuclideanDistance</span><span class="params">(p1, p2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> numpy.sqrt(numpy.square(float(p1.height) - float(p2.height))+numpy.square(float(p1.weight) - float(p2.weight)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compare</span><span class="params">(people)</span>:</span></span><br><span class="line">    i = <span class="number">0</span></span><br><span class="line">    similar = <span class="number">999</span></span><br><span class="line">    mark = [<span class="keyword">None</span>,<span class="keyword">None</span>]</span><br><span class="line">    <span class="keyword">while</span> i &lt; len(people)<span class="number">-1</span>:</span><br><span class="line">        j = i+<span class="number">1</span></span><br><span class="line">        person = people[i]</span><br><span class="line">        <span class="keyword">while</span> j &lt; len(people):</span><br><span class="line">            euclideanDistance = calEuclideanDistance(person, people[j])</span><br><span class="line">            <span class="keyword">if</span> similar &gt; euclideanDistance:</span><br><span class="line">                similar = euclideanDistance</span><br><span class="line">                mark[<span class="number">0</span>] = i</span><br><span class="line">                mark[<span class="number">1</span>] = j</span><br><span class="line">            j += <span class="number">1</span></span><br><span class="line">        i += <span class="number">1</span></span><br><span class="line">    print(similar)</span><br><span class="line">    <span class="keyword">return</span> mark</span><br></pre></td></tr></table></figure>
+<p>client.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span><span class="params">(content)</span>:</span></span><br><span class="line">    file_handler = open(<span class="string">'data.txt'</span>, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    file_handler.write(content+<span class="string">'\n'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">connect_to_server</span><span class="params">(ip)</span>:</span></span><br><span class="line">    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">    s.settimeout(<span class="number">2</span>)</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        s.connect((ip, <span class="number">2333</span>))</span><br><span class="line">        s.send(<span class="string">'get'</span>.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">        data = s.recv(<span class="number">1024</span>)</span><br><span class="line">        data = data.decode(<span class="string">'utf-8'</span>)</span><br><span class="line">        <span class="keyword">if</span> data != <span class="string">"Received"</span>:</span><br><span class="line">            print(<span class="string">'收到来自服务器的消息'</span> + data)</span><br><span class="line">            write_to_file(data)</span><br><span class="line">        s.send(<span class="string">'exit'</span>.encode(<span class="string">'utf-8'</span>))</span><br><span class="line">        s.close()</span><br><span class="line">    <span class="keyword">except</span> socket.timeout:</span><br><span class="line">        print(<span class="string">'%s连接超时'</span> % (ip))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    ip = <span class="string">'192.168.135.'</span></span><br><span class="line">    i = <span class="number">181</span></span><br><span class="line">    <span class="keyword">while</span> i &lt;= <span class="number">220</span>:</span><br><span class="line">        ips = ip + str(i)</span><br><span class="line">        connect_to_server(ips)</span><br><span class="line">        i += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>analyse.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding:utf-8 -*-</span></span><br><span class="line"><span class="keyword">from</span> Utils <span class="keyword">import</span> read_from_file, compare</span><br><span class="line"><span class="keyword">from</span> Student <span class="keyword">import</span> Student</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    lines = read_from_file()</span><br><span class="line">    line_list = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> lines:</span><br><span class="line">        component = i.split(<span class="string">';'</span>)</span><br><span class="line">        one = Student(component[<span class="number">0</span>], component[<span class="number">1</span>], component[<span class="number">2</span>], component[<span class="number">3</span>])</span><br><span class="line">        line_list.append(one)</span><br><span class="line">    res = compare(line_list)</span><br><span class="line">    people = [line_list[res[<span class="number">0</span>]].number, line_list[res[<span class="number">1</span>]].number]</span><br><span class="line">    print(people)</span><br></pre></td></tr></table></figure>
+<p>示例一下爬取结果:</p>
+<p>data.txt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">1527406002;172;71;L</span><br><span class="line">1527406030;160;46;S</span><br><span class="line">1527406011;165;50;M</span><br><span class="line">1527406015;165;57;L</span><br><span class="line">1527406012;179;85;XL</span><br><span class="line">1527406043;100;50;L</span><br><span class="line">1527406058;195;80;XXXL</span><br><span class="line">1527406045;176;58;L</span><br><span class="line">1527406027;170;75;L</span><br><span class="line">1527406053;175;82;XXL</span><br><span class="line">1527406051;180;68;XL</span><br><span class="line">1527406046;172;50;M</span><br><span class="line">1527406044;171;60;XL</span><br><span class="line">1527406034;178;80;XXXL</span><br><span class="line">1527406010;173;67;M</span><br><span class="line">1527406056;172;60;L</span><br><span class="line">1527406032;180;70;L</span><br><span class="line">1527406048;160;50;M</span><br><span class="line">1527406023;176;58;L</span><br><span class="line">1527406059;172;76;XL</span><br><span class="line">1527406022;159;49;M</span><br></pre></td></tr></table></figure>
+<p>用client爬取数据, 考虑了超时情况, 然后检查data.txt,检查异常,然后运行analyse</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/27/Books(2)-50-things-to-a-better-life/" rel="next" title="通向自由的50个丢弃">
+                <i class="fa fa-chevron-left"></i> 通向自由的50个丢弃
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/31/Python(5)-most-similar-classmates3/" rel="prev" title="班级同学最相似体型的计算3">
+                班级同学最相似体型的计算3 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="服务器," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="小提琴真的是好美.(B站有此小提琴奏见的演奏视频, UP:Zz白日梦zZ.) 第一次用阿里云和hexo搭建博客的时候还挺顺的, 昨天重装个系统后再装hexo, 感觉整个人都崩了. 但是慢慢搞明白了之后,就不那么复杂了. 把搭建过程完整的写在下面,下次就可以直接照着自己的教程搭建了.(估计不会忘了…) 搭建hexo这一步是从重装系统之后,完完全全的裸机开始. 耗时(网速好,15分钟左右) 系统">
+<meta name="keywords" content="服务器">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Hexo搭建博客">
+<meta property="og:url" content="http://limbowandering.com/2017/07/14/Server(1)-Build-blogs-with-hexo/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="小提琴真的是好美.(B站有此小提琴奏见的演奏视频, UP:Zz白日梦zZ.) 第一次用阿里云和hexo搭建博客的时候还挺顺的, 昨天重装个系统后再装hexo, 感觉整个人都崩了. 但是慢慢搞明白了之后,就不那么复杂了. 把搭建过程完整的写在下面,下次就可以直接照着自己的教程搭建了.(估计不会忘了…) 搭建hexo这一步是从重装系统之后,完完全全的裸机开始. 耗时(网速好,15分钟左右) 系统">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-01T13:50:35.521Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Hexo搭建博客">
+<meta name="twitter:description" content="小提琴真的是好美.(B站有此小提琴奏见的演奏视频, UP:Zz白日梦zZ.) 第一次用阿里云和hexo搭建博客的时候还挺顺的, 昨天重装个系统后再装hexo, 感觉整个人都崩了. 但是慢慢搞明白了之后,就不那么复杂了. 把搭建过程完整的写在下面,下次就可以直接照着自己的教程搭建了.(估计不会忘了…) 搭建hexo这一步是从重装系统之后,完完全全的裸机开始. 耗时(网速好,15分钟左右) 系统">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/07/14/Server(1)-Build-blogs-with-hexo/"/>
+
+
+
+
+
+  <title>使用Hexo搭建博客 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/07/14/Server(1)-Build-blogs-with-hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用Hexo搭建博客</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-14T17:19:00+08:00">
+                2017-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Server/" itemprop="url" rel="index">
+                    <span itemprop="name">Server</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=446581154&auto=1&height=66"></iframe>
+
+<p> 小提琴真的是好美.(B站有此小提琴奏见的演奏视频, UP:Zz白日梦zZ.)</p>
+<p>第一次用阿里云和hexo搭建博客的时候还挺顺的, 昨天重装个系统后再装hexo, 感觉整个人都崩了. 但是慢慢搞明白了之后,就不那么复杂了. 把搭建过程完整的写在下面,下次就可以直接照着自己的教程搭建了.(估计不会忘了…)</p>
+<h3 id="搭建hexo"><a href="#搭建hexo" class="headerlink" title="搭建hexo"></a>搭建hexo</h3><p>这一步是从重装系统之后,完完全全的裸机开始. 耗时(网速好,15分钟左右)</p>
+<p>系统:centOS 6.8 64位</p>
+<p>依次安装git nvm nodejs hexo </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ yum install git</span><br><span class="line">$ curl  https://raw.githubusercontent.com/creationix/nvm/v0.13.1/install.sh | bash <span class="comment">#这一步是安装nvm</span></span><br><span class="line">$ nvm list-remote <span class="comment">#显示可用的node版本</span></span><br><span class="line">$ nvm install v6.11.0 <span class="comment">#我经历过多少泪之后确定的一个能用的版本</span></span><br><span class="line">$ nvm <span class="built_in">alias</span> default v6.11.0<span class="comment">#设置默认版本 建议一开始就设置好</span></span><br><span class="line"><span class="comment">#接下来的步骤就是安装hexo了 可以参照官网hexo.io 毕竟一直在更新</span></span><br><span class="line">$ npm install hexo-cli -g</span><br><span class="line">$ hexo init blog</span><br><span class="line">$ <span class="built_in">cd</span> blog</span><br><span class="line">$ npm install hexo --save</span><br><span class="line">$ hexo g</span><br><span class="line">$ hexo s</span><br><span class="line"><span class="comment">#下面再列出一些nvm的常用操作</span></span><br><span class="line">$ nvm use 6.11.0 <span class="comment">#切换版本</span></span><br><span class="line">$ nvm list <span class="comment">#查看已安装版本</span></span><br></pre></td></tr></table></figure>
+<p>至此,hexo应该已经可以运行了,下一部有两种操作,一种是通过nginx修改网站根目录,直接设置在hexo的public下面, 另一种是修改hexo的配置, 让hexo运行在80端口.</p>
+<h3 id="配置Nginx"><a href="#配置Nginx" class="headerlink" title="配置Nginx"></a>配置Nginx</h3><p>安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install nginx -y</span><br></pre></td></tr></table></figure>
+<p>然后修改配置,修改 <em>/etc/nginx/conf.d/default.conf</em></p>
+<p>示例代码:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># The default server</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    <span class="comment">#listen       [::]:80 default_server;</span></span><br><span class="line">    <span class="comment">#取消对IPv6地址的监听,centOS6 不支持, 所以.</span></span><br><span class="line">    server_name  Limbowandering.com;</span><br><span class="line">    root         /blog/public;<span class="comment">#根目录</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># Load configuration files for the default server block.</span></span><br><span class="line">    include /etc/nginx/default.d/*.conf;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error_page 404 /404.html;</span><br><span class="line">        location = /blog/public/404.html &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    error_page 500 502 503 504 /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改完成后, 启动Nginx</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ nginx</span><br><span class="line">$ chkconfig nginx on<span class="comment">#设置nginx为开机自动启动</span></span><br></pre></td></tr></table></figure>
+<p>至此, 完工.20分钟内妥妥的.</p>
+<h3 id="第二种方法"><a href="#第二种方法" class="headerlink" title="第二种方法"></a>第二种方法</h3><p>感觉这个比nginx麻烦</p>
+<p>修改blog文件夹下:_config.yml文件. 手动添加如下代码:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server:</span><br><span class="line">  port: 80</span><br><span class="line"></span><br><span class="line"><span class="comment">#注意, port前面空两格, 80前面空一格.</span></span><br></pre></td></tr></table></figure>
+<p>然后运行hexo s的时候就会发现运行在80端口了. 然后就可以浏览器直接访问了.</p>
+<p>关掉进程:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ps -A <span class="comment">#查看所有进程</span></span><br><span class="line">$ Kill -9 2379<span class="comment">#举个例子, 如果发现hexo进程是2379的话 就干掉他就好了</span></span><br></pre></td></tr></table></figure>
+<p>完工.</p>
+<h3 id="其他一些小问题"><a href="#其他一些小问题" class="headerlink" title="其他一些小问题:"></a>其他一些小问题:</h3><ul>
+<li><p>关于win10下占用4000端口的问题 hexo server -p 3600就行了</p>
+</li>
+<li><p>出现以下情况:</p>
+<p>FATAL can not read a block mapping entry; a multiline key may not be an implicit key at line 11, column 9:</p>
+<p>_config.yml文件编辑的时候, 注意选项和值中间有一个空格! </p>
+</li>
+</ul>
+<h3 id="设置一键部署到github-pages"><a href="#设置一键部署到github-pages" class="headerlink" title="设置一键部署到github pages"></a>设置一键部署到github pages</h3><p>首先你得有一个github pages, 这个就不写了.</p>
+<p>然后得为hexo安装git插件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>然后修改hexo的配置文件:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Deployment</span></span><br><span class="line"><span class="comment">## Docs: https://hexo.io/docs/deployment.html</span></span><br><span class="line">deploy:</span><br><span class="line">  <span class="built_in">type</span>: git</span><br><span class="line">  repository: 		     https://github.com/limbowandering/limbowandering.github.io</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>然后就是需要一个SSH key. 可直接参考github的说明文档. </p>
+<h3 id="设置一键部署到阿里云"><a href="#设置一键部署到阿里云" class="headerlink" title="设置一键部署到阿里云"></a>设置一键部署到阿里云</h3><p>如果把博客放在阿里云的话, 还可以设置一键部署 </p>
+<p>参考文章: <a href="https://www.baidu.com/link?url=TWDPrCiEP_j5STesq06O_j33_8xLCdxp2tx1a1GR3HC8nhsPWBKpajsj5FW_rC6U4jJyP2mMZxKpYonlLEjzya&amp;wd=&amp;eqid=ce08f83800002e4c000000035978451e" target="_blank" rel="noopener"><em>阿里云VPS搭建自己的</em>的Hexo博客</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">$ adduser git<span class="comment">#创建git 用户</span></span><br><span class="line">$ chmod 740 /etc/sudoers</span><br><span class="line">$ vim /etc/sudoers</span><br><span class="line"><span class="comment">#找到以下内容</span></span><br><span class="line"><span class="comment">## Allow root to run any commands anywhere</span></span><br><span class="line">root    ALL=(ALL)     ALL</span><br><span class="line">在下面添加一行:</span><br><span class="line">git ALL=(ALL) ALL</span><br><span class="line">保存退出后改回权限</span><br><span class="line">$ chmod 400 /etc/sudoer</span><br><span class="line">随后设置git用户的密码</span><br><span class="line">$ sudo passwd git</span><br><span class="line">$ su git<span class="comment">#切换到git用户 创建文件夹和文件 并赋予相应的权限</span></span><br><span class="line">$ su git</span><br><span class="line">$ mkdir ~/.ssh</span><br><span class="line">$ vim ~/.ssh/authorized_keys</span><br><span class="line"><span class="comment">#然后将电脑中执行 cat ~/.ssh/id_rsa.pub | pbcopy ,将公钥复制粘贴到authorized_keys</span></span><br><span class="line">$ chmod 600 ~/.ssh/authorzied_keys</span><br><span class="line">$ chmod 700 ~/.ss</span><br><span class="line">然后就可以执行ssh 命令测试是否可以免密登录</span><br><span class="line">$ ssh -v git@SERVER</span><br><span class="line">至此, git用户添加完成</span><br><span class="line"></span><br><span class="line">然后, 服务器上建立一个git裸库</span><br><span class="line">创建一个裸仓库，裸仓库就是只保存git信息的Repository, 首先切换到git用户确保git用户拥有仓库所有权</span><br><span class="line">一定要加 --bare，这样才是一个裸库</span><br><span class="line">$ su git</span><br><span class="line">$ <span class="built_in">cd</span> ~</span><br><span class="line">$ git init --bare blog.git</span><br><span class="line">然后使用git-hooks同步网站根目录</span><br><span class="line">在这里我们使用的是post-receive这个钩子，当git有收发的时候就会调用这个钩子。 在 ~/blog.git 裸库的 hooks文件夹中，</span><br><span class="line">新建post-receive文件.</span><br><span class="line">$ vim ~/blog.git/hooks/post-receive</span><br><span class="line"></span><br><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line">$ git --work-tree=/path/to/www --git-dir=~/blog.git checkout -f</span><br><span class="line">保存后, 要赋予这个文件可执行权限</span><br><span class="line">$ chmod +x post-receive</span><br><span class="line">最后一步就是配置_config.yml, 完成自动化部署了</span><br><span class="line">deploy:</span><br><span class="line">    <span class="built_in">type</span>: git</span><br><span class="line">    repo: git@SERVER:/home/git/blog.git    //&lt;repository url&gt;</span><br><span class="line">    branch: master            //这里填写分支   [branch]</span><br><span class="line">    message: 提交的信息         //自定义提交信息 (默认为 Site updated: &#123;&#123; now(<span class="string">'YYYY-MM-DD HH:mm:ss'</span>) &#125;&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="hexo主题配置"><a href="#hexo主题配置" class="headerlink" title="hexo主题配置"></a>hexo主题配置</h3><p>我采用的是<a href="http://theme-next.iissnan.com" target="_blank" rel="noopener">Next主题</a></p>
+<p>这个的话,按照说明文档一步一步来就好了呀~ 感觉这一步是最愉快的! 尽情的美化吧!</p>
+<p>OK, 完工. 开始愉快的blog吧.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/服务器/" rel="tag"># 服务器</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/15/Bodybuilding(1)-Training-Knowing your body/" rel="prev" title="健身-认识你的体型">
+                健身-认识你的体型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建hexo"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x642D;&#x5EFA;hexo" class="headerlink" title="&#x642D;&#x5EFA;hexo"></a>&#x642D;&#x5EFA;hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Nginx"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x914D;&#x7F6E;Nginx" class="headerlink" title="&#x914D;&#x7F6E;Nginx"></a>&#x914D;&#x7F6E;Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二种方法"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x7B2C;&#x4E8C;&#x79CD;&#x65B9;&#x6CD5;" class="headerlink" title="&#x7B2C;&#x4E8C;&#x79CD;&#x65B9;&#x6CD5;"></a>&#x7B2C;&#x4E8C;&#x79CD;&#x65B9;&#x6CD5;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他一些小问题"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x5176;&#x4ED6;&#x4E00;&#x4E9B;&#x5C0F;&#x95EE;&#x9898;" class="headerlink" title="&#x5176;&#x4ED6;&#x4E00;&#x4E9B;&#x5C0F;&#x95EE;&#x9898;:"></a>&#x5176;&#x4ED6;&#x4E00;&#x4E9B;&#x5C0F;&#x95EE;&#x9898;:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置一键部署到github-pages"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x8BBE;&#x7F6E;&#x4E00;&#x952E;&#x90E8;&#x7F72;&#x5230;github-pages" class="headerlink" title="&#x8BBE;&#x7F6E;&#x4E00;&#x952E;&#x90E8;&#x7F72;&#x5230;github pages"></a>&#x8BBE;&#x7F6E;&#x4E00;&#x952E;&#x90E8;&#x7F72;&#x5230;github pages</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置一键部署到阿里云"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x8BBE;&#x7F6E;&#x4E00;&#x952E;&#x90E8;&#x7F72;&#x5230;&#x963F;&#x91CC;&#x4E91;" class="headerlink" title="&#x8BBE;&#x7F6E;&#x4E00;&#x952E;&#x90E8;&#x7F72;&#x5230;&#x963F;&#x91CC;&#x4E91;"></a>&#x8BBE;&#x7F6E;&#x4E00;&#x952E;&#x90E8;&#x7F72;&#x5230;&#x963F;&#x91CC;&#x4E91;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hexo主题配置"><span class="nav-number">7.</span> <span class="nav-text"><a href="#hexo&#x4E3B;&#x9898;&#x914D;&#x7F6E;" class="headerlink" title="hexo&#x4E3B;&#x9898;&#x914D;&#x7F6E;"></a>hexo&#x4E3B;&#x9898;&#x914D;&#x7F6E;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

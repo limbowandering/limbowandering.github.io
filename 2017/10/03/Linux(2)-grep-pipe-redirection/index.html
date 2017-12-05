@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Linux过滤器过滤器是什么? 过滤器就是从标准输入按行读取内容, 并且把内容写到标准输出, 这是最简单的没有任何过滤功能的过滤器, 当然了也有各种功能的过滤器.  基本行过滤器 面向行的过滤器  catcat [-nbs] file cat可以把一个至多个文件连接在一起, 然后输出到屏幕.  -n number 在每行输出添加行号. -b blank 和-n一起使用时, 空白行不编号 -s sq">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux过滤器,管道与重定向">
+<meta property="og:url" content="http://limbowandering.com/2017/10/03/Linux(2)-grep-pipe-redirection/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="Linux过滤器过滤器是什么? 过滤器就是从标准输入按行读取内容, 并且把内容写到标准输出, 这是最简单的没有任何过滤功能的过滤器, 当然了也有各种功能的过滤器.  基本行过滤器 面向行的过滤器  catcat [-nbs] file cat可以把一个至多个文件连接在一起, 然后输出到屏幕.  -n number 在每行输出添加行号. -b blank 和-n一起使用时, 空白行不编号 -s sq">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-04T13:51:34.331Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux过滤器,管道与重定向">
+<meta name="twitter:description" content="Linux过滤器过滤器是什么? 过滤器就是从标准输入按行读取内容, 并且把内容写到标准输出, 这是最简单的没有任何过滤功能的过滤器, 当然了也有各种功能的过滤器.  基本行过滤器 面向行的过滤器  catcat [-nbs] file cat可以把一个至多个文件连接在一起, 然后输出到屏幕.  -n number 在每行输出添加行号. -b blank 和-n一起使用时, 空白行不编号 -s sq">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/10/03/Linux(2)-grep-pipe-redirection/"/>
+
+
+
+
+
+  <title>Linux过滤器,管道与重定向 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/10/03/Linux(2)-grep-pipe-redirection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux过滤器,管道与重定向</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-03T23:59:00+08:00">
+                2017-10-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Linux过滤器"><a href="#Linux过滤器" class="headerlink" title="Linux过滤器"></a>Linux过滤器</h2><p>过滤器是什么? 过滤器就是从标准输入按行读取内容, 并且把内容写到标准输出, 这是最简单的没有任何过滤功能的过滤器, 当然了也有各种功能的过滤器. </p>
+<h3 id="基本行过滤器"><a href="#基本行过滤器" class="headerlink" title="基本行过滤器"></a>基本行过滤器</h3><blockquote>
+<p>面向行的过滤器</p>
+</blockquote>
+<h4 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h4><p><code>cat [-nbs] file</code></p>
+<p>cat可以把一个至多个文件连接在一起, 然后输出到屏幕. </p>
+<p>-n number 在每行输出添加行号.</p>
+<p>-b blank 和-n一起使用时, 空白行不编号</p>
+<p>-s squeeze 将多个空白行替换为一个</p>
+<h4 id="tac"><a href="#tac" class="headerlink" title="tac"></a>tac</h4><p>tac是cat的反向拼写, 所以功能刚好是相反的, 再把读到的内容写入到标准输出时把行的顺序翻转过来, 当然了也可以是多个文件, 这个在看日志文件的时候很方便. </p>
+<h4 id="Split"><a href="#Split" class="headerlink" title="Split"></a>Split</h4><p>把文件分割开来</p>
+<p>根据行数, split默认分割行数是1000行.</p>
+<p><code>split [-d][-a num][-l lines][file [prefix]]</code> </p>
+<p>-d : 表示分割的文件名从0开始编号</p>
+<p>-a : 表示使用-d数字的位数</p>
+<p>-l : 表示分割的行数</p>
+<p>prefix: 表示分割文件名字的前缀.</p>
+<h4 id="rev"><a href="#rev" class="headerlink" title="rev"></a>rev</h4><blockquote>
+<p>rev reverse 反转每一行字符的顺序, 跟字符串反转是一样的, 不过按行处理</p>
+</blockquote>
+<h4 id="head"><a href="#head" class="headerlink" title="head"></a>head</h4><p><code>head [-n lines]</code></p>
+<p>head从标准输入读取数据, 输出数据的前n行默认显示前十行</p>
+<h4 id="tail"><a href="#tail" class="headerlink" title="tail"></a>tail</h4><p><code>tail [-n lines]</code></p>
+<p>从标准输入读取数据, 输出数据的后n行, 默认显示后十行</p>
+<h4 id="less"><a href="#less" class="headerlink" title="less"></a>less</h4><p><code>less files</code> </p>
+<p>默认显示一个屏幕的数据</p>
+<h3 id="列过滤器"><a href="#列过滤器" class="headerlink" title="列过滤器"></a>列过滤器</h3><h4 id="colrm"><a href="#colrm" class="headerlink" title="colrm"></a>colrm</h4><blockquote>
+<p>colrm  = column remove</p>
+</blockquote>
+<p><code>colrm startcol endcol</code></p>
+<p><code>colrm 1 2 &lt; t</code> 删除第一列和第二列</p>
+<h4 id="cut"><a href="#cut" class="headerlink" title="cut"></a>cut</h4><blockquote>
+<p>从标准输入中选择列作为标准输出</p>
+</blockquote>
+<p><code>cut [-cd list] file</code></p>
+<p>-c (column列) 是跟colrm一样按列选择, 可以使用”,” 组成list</p>
+<p>-d(delimiter 分隔符) 根据特殊符号分割行, 然后使用-f (field 域)选择分割的列</p>
+<p><code>cut -c 1-2,3-5 t</code></p>
+<p><code>cut -f 1-d &quot;;&quot; t</code> </p>
+<h3 id="比较过滤器"><a href="#比较过滤器" class="headerlink" title="比较过滤器"></a>比较过滤器</h3><h4 id="cmp"><a href="#cmp" class="headerlink" title="cmp"></a>cmp</h4><p><code>cmp file1 file2</code> 比较两个文件按照字节, 所以文件可以是二进制或者文本.</p>
+<h4 id="diff"><a href="#diff" class="headerlink" title="diff"></a>diff</h4><p><code>diff [-iwbc] file1 file2</code></p>
+<p>-i: 忽略大小写这个好像在很多地方都用到了</p>
+<p>-w: 忽略所有的空白符(ab,a b是一样的</p>
+<p>-b: 忽略空白符, 不过是把多个空白符合并成一个</p>
+<p>-c: 输出不同的时候, 显示上下文比较容易理解</p>
+<h3 id="Linux管道"><a href="#Linux管道" class="headerlink" title="Linux管道"></a>Linux管道</h3><p>“|”是管道命令操作符, 简称管道符. 利用Linux所提供的管道符|将两个命令隔开, 管道符左边命令的输出就会作为管道符右边命令的输入. 连续使用管道意味着第一个命令的输出会作为第二个命令的输入, 第二个命令的输出又会作为第三个命令的输入. 以此类推.</p>
+<p>它仅能处理经由前面一个指令传出的正确输出信息, 也就是标准输出的信息, 对于standard error信息没有直接处理能力.</p>
+<p>用法示例: ls -l | more</p>
+<p>该命令列出当前目录中的文档,并把输出送给more命令作为输入, more命令分页显示文件列表.</p>
+<h3 id="Linux中重定向"><a href="#Linux中重定向" class="headerlink" title="Linux中重定向"></a>Linux中重定向</h3><h4 id="重定向符号"><a href="#重定向符号" class="headerlink" title="重定向符号"></a>重定向符号</h4><p><code>&gt;</code> 输出重定向到一个文件或者设备 覆盖原来的文件</p>
+<p><code>&gt;!</code> 输出重定向到一个文件或设备 强制覆盖原来的文件</p>
+<p><code>&gt;&gt;</code> 输出重定向到一个文件或设备 追加原来的文件</p>
+<p><code>&lt;</code> 输出重定向到一个程序</p>
+<h4 id="为何要使用命令输出重定向"><a href="#为何要使用命令输出重定向" class="headerlink" title="为何要使用命令输出重定向"></a>为何要使用命令输出重定向</h4><ul>
+<li>当屏幕输出的信息很重要, 而且我们需要将他存下来的时候.</li>
+<li>后台执行中的程序, 不希望他干扰屏幕正常的输出结果时</li>
+<li>一些系统的例行命令(例如写在/etc/crontab中的文件) 的执行结果, 希望他可以存下来时.</li>
+<li>错误讯息与正确信息需要分别输出时候.</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/03/Linux(1)-Global-Regular-Expression-Print/" rel="next" title="Linux grep命令">
+                <i class="fa fa-chevron-left"></i> Linux grep命令
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/04/Algorithm(1)-Similar-image-recognition/" rel="prev" title="相似图片识别原理">
+                相似图片识别原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux过滤器"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Linux&#x8FC7;&#x6EE4;&#x5668;" class="headerlink" title="Linux&#x8FC7;&#x6EE4;&#x5668;"></a>Linux&#x8FC7;&#x6EE4;&#x5668;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本行过滤器"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x57FA;&#x672C;&#x884C;&#x8FC7;&#x6EE4;&#x5668;" class="headerlink" title="&#x57FA;&#x672C;&#x884C;&#x8FC7;&#x6EE4;&#x5668;"></a>&#x57FA;&#x672C;&#x884C;&#x8FC7;&#x6EE4;&#x5668;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cat"><span class="nav-number">1.1.1.</span> <span class="nav-text"><a href="#cat" class="headerlink" title="cat"></a>cat</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tac"><span class="nav-number">1.1.2.</span> <span class="nav-text"><a href="#tac" class="headerlink" title="tac"></a>tac</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Split"><span class="nav-number">1.1.3.</span> <span class="nav-text"><a href="#Split" class="headerlink" title="Split"></a>Split</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#rev"><span class="nav-number">1.1.4.</span> <span class="nav-text"><a href="#rev" class="headerlink" title="rev"></a>rev</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#head"><span class="nav-number">1.1.5.</span> <span class="nav-text"><a href="#head" class="headerlink" title="head"></a>head</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tail"><span class="nav-number">1.1.6.</span> <span class="nav-text"><a href="#tail" class="headerlink" title="tail"></a>tail</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#less"><span class="nav-number">1.1.7.</span> <span class="nav-text"><a href="#less" class="headerlink" title="less"></a>less</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列过滤器"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x5217;&#x8FC7;&#x6EE4;&#x5668;" class="headerlink" title="&#x5217;&#x8FC7;&#x6EE4;&#x5668;"></a>&#x5217;&#x8FC7;&#x6EE4;&#x5668;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#colrm"><span class="nav-number">1.2.1.</span> <span class="nav-text"><a href="#colrm" class="headerlink" title="colrm"></a>colrm</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#cut"><span class="nav-number">1.2.2.</span> <span class="nav-text"><a href="#cut" class="headerlink" title="cut"></a>cut</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#比较过滤器"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x6BD4;&#x8F83;&#x8FC7;&#x6EE4;&#x5668;" class="headerlink" title="&#x6BD4;&#x8F83;&#x8FC7;&#x6EE4;&#x5668;"></a>&#x6BD4;&#x8F83;&#x8FC7;&#x6EE4;&#x5668;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cmp"><span class="nav-number">1.3.1.</span> <span class="nav-text"><a href="#cmp" class="headerlink" title="cmp"></a>cmp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#diff"><span class="nav-number">1.3.2.</span> <span class="nav-text"><a href="#diff" class="headerlink" title="diff"></a>diff</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux管道"><span class="nav-number">1.4.</span> <span class="nav-text"><a href="#Linux&#x7BA1;&#x9053;" class="headerlink" title="Linux&#x7BA1;&#x9053;"></a>Linux&#x7BA1;&#x9053;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linux中重定向"><span class="nav-number">1.5.</span> <span class="nav-text"><a href="#Linux&#x4E2D;&#x91CD;&#x5B9A;&#x5411;" class="headerlink" title="Linux&#x4E2D;&#x91CD;&#x5B9A;&#x5411;"></a>Linux&#x4E2D;&#x91CD;&#x5B9A;&#x5411;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#重定向符号"><span class="nav-number">1.5.1.</span> <span class="nav-text"><a href="#&#x91CD;&#x5B9A;&#x5411;&#x7B26;&#x53F7;" class="headerlink" title="&#x91CD;&#x5B9A;&#x5411;&#x7B26;&#x53F7;"></a>&#x91CD;&#x5B9A;&#x5411;&#x7B26;&#x53F7;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为何要使用命令输出重定向"><span class="nav-number">1.5.2.</span> <span class="nav-text"><a href="#&#x4E3A;&#x4F55;&#x8981;&#x4F7F;&#x7528;&#x547D;&#x4EE4;&#x8F93;&#x51FA;&#x91CD;&#x5B9A;&#x5411;" class="headerlink" title="&#x4E3A;&#x4F55;&#x8981;&#x4F7F;&#x7528;&#x547D;&#x4EE4;&#x8F93;&#x51FA;&#x91CD;&#x5B9A;&#x5411;"></a>&#x4E3A;&#x4F55;&#x8981;&#x4F7F;&#x7528;&#x547D;&#x4EE4;&#x8F93;&#x51FA;&#x91CD;&#x5B9A;&#x5411;</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Sublime,配置," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="(游戏To the moon的BGM, Johnny给River写的曲子,感动) sublime真的是太好用了哇. 配置之后真的很方便. 这篇博客就写一下Mac和windows下配置C++编译环境的方法吧.  官方文档  windows下配置CSDN参考文章 步骤:  安装MinGW和添加环境变量 编写build配置文件 完工  这个编译环境什么意思呢? C++的代码在windows下编译运行">
+<meta name="keywords" content="Sublime,配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac和Windows下配置sublime编译环境">
+<meta property="og:url" content="http://limbowandering.com/2017/08/06/Configuration(1)-Sublime-Biulding-System/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="(游戏To the moon的BGM, Johnny给River写的曲子,感动) sublime真的是太好用了哇. 配置之后真的很方便. 这篇博客就写一下Mac和windows下配置C++编译环境的方法吧.  官方文档  windows下配置CSDN参考文章 步骤:  安装MinGW和添加环境变量 编写build配置文件 完工  这个编译环境什么意思呢? C++的代码在windows下编译运行">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-01T13:49:53.788Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mac和Windows下配置sublime编译环境">
+<meta name="twitter:description" content="(游戏To the moon的BGM, Johnny给River写的曲子,感动) sublime真的是太好用了哇. 配置之后真的很方便. 这篇博客就写一下Mac和windows下配置C++编译环境的方法吧.  官方文档  windows下配置CSDN参考文章 步骤:  安装MinGW和添加环境变量 编写build配置文件 完工  这个编译环境什么意思呢? C++的代码在windows下编译运行">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/08/06/Configuration(1)-Sublime-Biulding-System/"/>
+
+
+
+
+
+  <title>Mac和Windows下配置sublime编译环境 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/08/06/Configuration(1)-Sublime-Biulding-System/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Mac和Windows下配置sublime编译环境</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-06T17:00:00+08:00">
+                2017-08-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Configuration/" itemprop="url" rel="index">
+                    <span itemprop="name">Configuration</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width="330" height="86" src="//music.163.com/outchain/player?type=2&id=1645112&auto=1&height=66"></iframe>
+
+<p>(游戏To the moon的BGM, Johnny给River写的曲子,感动)</p>
+<p>sublime真的是太好用了哇. 配置之后真的很方便. 这篇博客就写一下Mac和windows下配置C++编译环境的方法吧.</p>
+<p> <a href="http://docs.sublimetext.info/en/latest/file_processing/build_systems.html" target="_blank" rel="noopener">官方文档</a> </p>
+<h2 id="windows下配置"><a href="#windows下配置" class="headerlink" title="windows下配置"></a>windows下配置</h2><p><a href="http://blog.csdn.net/ac_machine/article/details/60765491" target="_blank" rel="noopener">CSDN参考文章</a></p>
+<p>步骤:</p>
+<ol>
+<li>安装MinGW和添加环境变量</li>
+<li>编写build配置文件</li>
+<li>完工</li>
+</ol>
+<p>这个编译环境什么意思呢? C++的代码在windows下编译运行需要执行一段cmd命令, 而这个命令是通过build配置文件实现的. build配置文件是json格式的, 拿官方文档的例子:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"cmd"</span>: [<span class="string">"python"</span>, <span class="string">"-u"</span>, <span class="string">"$file"</span>],</span><br><span class="line">    <span class="attr">"file_regex"</span>: <span class="string">"^[ ]*File \"(...*?)\", line ([0-9]*)"</span>,</span><br><span class="line">    <span class="attr">"selector"</span>: <span class="string">"source.python"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>cmd 后的命令就是 </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -u /path/to/current/file.ext</span><br></pre></td></tr></table></figure>
+<p>的意思咯.</p>
+<p>MinGW是什么呢? MinGW是Minimalist GNU on Windows, 里面包含了C++的编译器, 它可以让我们再windows下Linux的命令运行c++程序. 下载安装g++编译器,然后把C:\MinGW\bin添加到环境变量path中.</p>
+<p>先把最终代码放出来,直接用这个就行.(Tools-&gt;Build System-&gt;New一个后保存)</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;  </span><br><span class="line">    <span class="attr">"cmd"</span>:<span class="string">"g++ -std=c++11 $file_name -o $file_base_name"</span>,  </span><br><span class="line">    <span class="attr">"file_regex"</span>: <span class="string">"^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"</span>,  </span><br><span class="line">    <span class="attr">"working_dir"</span>: <span class="string">"$&#123;file_path&#125;"</span>,  </span><br><span class="line">    <span class="attr">"selector"</span>: <span class="string">"source.c, source.c++"</span>,  </span><br><span class="line">    <span class="attr">"shell"</span>: <span class="literal">true</span>,  </span><br><span class="line">    <span class="attr">"encoding"</span>:<span class="string">"cp936"</span>,  </span><br><span class="line">    <span class="attr">"variants"</span>:[  </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="attr">"name"</span>:<span class="string">"g++ Compile"</span>,  </span><br><span class="line">            <span class="attr">"cmd"</span>:<span class="string">"g++ -std=c++11 $file_name -o $file_base_name"</span>  </span><br><span class="line">        &#125;,  </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="attr">"name"</span>:<span class="string">"g++ Run"</span>,  </span><br><span class="line">            <span class="attr">"cmd"</span>:<span class="string">"start cmd /k $file_base_name"</span>  </span><br><span class="line">        &#125;  </span><br><span class="line">    ]  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>-std=c++11是添加g++的编译选项. 其他的一些命令我也没求甚解.</p>
+<p>重点: sublime 的 build system 里接受的命令输出都被重定向到了 sublime 自身， cin 之类的没法接受输入。于是乎上述配置文件的g++ run 会弹出终端,在终端就可以输入了.</p>
+<p>配置文件是用json写的,感觉还是比较清晰的:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">名称</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Working_dir</td>
+<td style="text-align:center">运行cmd是会切换到working_dir制定的工作目录</td>
+</tr>
+<tr>
+<td style="text-align:center">cmd</td>
+<td style="text-align:center">包括命令及其参数.如果不指定绝对路径,外部程序会在你系统的:const:PATH环境变量中搜索.</td>
+</tr>
+<tr>
+<td style="text-align:center">shell_cmd</td>
+<td style="text-align:center">相当于Shell:True的cmd,cmd可以通过shell运行</td>
+</tr>
+<tr>
+<td style="text-align:center">file_regex</td>
+<td style="text-align:center">该选项用Perl的正则表达式来捕获构建系统的错误输出到sublime的窗口</td>
+</tr>
+<tr>
+<td style="text-align:center">selector</td>
+<td style="text-align:center">在选定Tools Build System Automic时根据这个自动选择编译系统</td>
+</tr>
+<tr>
+<td style="text-align:center">variants</td>
+<td style="text-align:center">用来替代主构件系统的备选.例如Run命令,会显示再tool的命令中</td>
+</tr>
+<tr>
+<td style="text-align:center">name</td>
+<td style="text-align:center">只在variants下面有,设置命令的名称</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">变量</th>
+<th style="text-align:center">含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">$file_path</td>
+<td style="text-align:center">当前文件所在的目录路径</td>
+</tr>
+<tr>
+<td style="text-align:center">$file</td>
+<td style="text-align:center">当前文件的详细路径</td>
+</tr>
+<tr>
+<td style="text-align:center">$file_name</td>
+<td style="text-align:center">文件全名(包含扩展名)</td>
+</tr>
+<tr>
+<td style="text-align:center">$file_extension</td>
+<td style="text-align:center">当前文件扩展名</td>
+</tr>
+<tr>
+<td style="text-align:center">$file_base_name</td>
+<td style="text-align:center">当前文件名(不包括扩展名)</td>
+</tr>
+</tbody>
+</table>
+<p>一些注意点:</p>
+<ul>
+<li>$file也可以写成${file}.</li>
+<li>运行cmd: start cmd /k hello . start cmd是在原来的cmd基础上重新打开一个cmd,目录在当前目录. /k的话是运行完不会关闭.</li>
+<li>variants就是备选命令咯,按Ctrl+Shift+B的话会出现对应选项.</li>
+</ul>
+<h2 id="Mac下的配置"><a href="#Mac下的配置" class="headerlink" title="Mac下的配置"></a>Mac下的配置</h2><p><a href="http://blog.csdn.net/luminous11/article/details/64129985" target="_blank" rel="noopener">参考配置</a></p>
+<p><a href="https://stackoverflow.com/questions/11601423/how-to-run-programs-in-an-external-console-with-sublime-text" target="_blank" rel="noopener">How to run programs in an external console with Sublime Text?</a></p>
+<p>原理在windows中讲过了，在Mac上有不同的是编译器是clang了。所以配置文件有所变化。这里直接给出最后我用的配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"cmd"</span>: [<span class="string">"clang++"</span>, <span class="string">"$&#123;file&#125;"</span>,<span class="string">"-std=c++11"</span>, <span class="string">"-stdlib=libc++"</span>, <span class="string">"-o"</span>, <span class="string">"$&#123;file_path&#125;/$&#123;file_base_name&#125;"</span>],</span><br><span class="line">    <span class="attr">"file_regex"</span>: <span class="string">"^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"</span>,</span><br><span class="line">    <span class="attr">"working_dir"</span>: <span class="string">"$&#123;file_path&#125;"</span>,</span><br><span class="line">    <span class="attr">"selector"</span>: <span class="string">"source.c, source.c++"</span>,</span><br><span class="line"> </span><br><span class="line">    <span class="attr">"variants"</span>:</span><br><span class="line">    [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="attr">"name"</span>: <span class="string">"Run"</span>,</span><br><span class="line">            <span class="attr">"cmd"</span>: [<span class="string">"bash"</span>, <span class="string">"-c"</span>, <span class="string">"g++ '$&#123;file&#125;' -o '$&#123;file_path&#125;/$&#123;file_base_name&#125;' &amp;&amp; open -a Terminal.app '$&#123;file_path&#125;/$&#123;file_base_name&#125;'"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完工了。尽情的敲键盘吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Sublime/" rel="tag"># Sublime</a>
+          
+            <a href="/tags/配置/" rel="tag"># 配置</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/26/Server(2)-github-pages-custom-domain/" rel="next" title="github pages custom domain">
+                <i class="fa fa-chevron-left"></i> github pages custom domain
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/07/Accessibility(1)-Mac-colorful-terminal/" rel="prev" title="Mac终端配色方案和显示分支以及高亮">
+                Mac终端配色方案和显示分支以及高亮 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#windows下配置"><span class="nav-number">1.</span> <span class="nav-text"><a href="#windows&#x4E0B;&#x914D;&#x7F6E;" class="headerlink" title="windows&#x4E0B;&#x914D;&#x7F6E;"></a>windows&#x4E0B;&#x914D;&#x7F6E;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mac下的配置"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Mac&#x4E0B;&#x7684;&#x914D;&#x7F6E;" class="headerlink" title="Mac&#x4E0B;&#x7684;&#x914D;&#x7F6E;"></a>Mac&#x4E0B;&#x7684;&#x914D;&#x7F6E;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
