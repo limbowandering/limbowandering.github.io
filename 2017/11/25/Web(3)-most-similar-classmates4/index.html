@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.3">
+
+
+
+
+
+
+  <meta name="keywords" content="ajax,JavaScript,json,sqlite," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="思路与说明 场景续上前三次的场景. 后台通过Python不断爬取同学们的信息, 然后存入数据库. 前端通过ajax访问自己的后台, 然后后台此时读数据库, 并把数据传到前台, 用表格形式呈现. 当需要计算时候, 可以发回后台计算, 得到结果把两人数据标红. (也可以在前端完成计算) 代码因为做的时候已经不在实验室了. 所以数据是自己手动写到数据库的….[拍脸] 这一段是手动写到数据库的命令行版本…">
+<meta name="keywords" content="ajax,JavaScript,json,sqlite">
+<meta property="og:type" content="article">
+<meta property="og:title" content="班级同学最相似体型计算-Web版本">
+<meta property="og:url" content="http://limbowandering.com/2017/11/25/Web(3)-most-similar-classmates4/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="思路与说明 场景续上前三次的场景. 后台通过Python不断爬取同学们的信息, 然后存入数据库. 前端通过ajax访问自己的后台, 然后后台此时读数据库, 并把数据传到前台, 用表格形式呈现. 当需要计算时候, 可以发回后台计算, 得到结果把两人数据标红. (也可以在前端完成计算) 代码因为做的时候已经不在实验室了. 所以数据是自己手动写到数据库的….[拍脸] 这一段是手动写到数据库的命令行版本…">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-05T11:51:06.244Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="班级同学最相似体型计算-Web版本">
+<meta name="twitter:description" content="思路与说明 场景续上前三次的场景. 后台通过Python不断爬取同学们的信息, 然后存入数据库. 前端通过ajax访问自己的后台, 然后后台此时读数据库, 并把数据传到前台, 用表格形式呈现. 当需要计算时候, 可以发回后台计算, 得到结果把两人数据标红. (也可以在前端完成计算) 代码因为做的时候已经不在实验室了. 所以数据是自己手动写到数据库的….[拍脸] 这一段是手动写到数据库的命令行版本…">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/11/25/Web(3)-most-similar-classmates4/"/>
+
+
+
+
+
+  <title>班级同学最相似体型计算-Web版本 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/11/25/Web(3)-most-similar-classmates4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">班级同学最相似体型计算-Web版本</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-25T00:00:00+08:00">
+                2017-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="思路与说明"><a href="#思路与说明" class="headerlink" title="思路与说明"></a>思路与说明</h2><p> 场景续上前三次的场景.</p>
+<p>后台通过Python不断爬取同学们的信息, 然后存入数据库. 前端通过ajax访问自己的后台, 然后后台此时读数据库, 并把数据传到前台, 用表格形式呈现. 当需要计算时候, 可以发回后台计算, 得到结果把两人数据标红. (也可以在前端完成计算)</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>因为做的时候已经不在实验室了. 所以数据是自己手动写到数据库的….[拍脸]</p>
+<p>这一段是手动写到数据库的命令行版本…真是SQL…</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import sqlite3</span><br><span class="line">conn = sqlite3.connect('student.db')</span><br><span class="line">exit()</span><br><span class="line">sqlite3 student.db</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> Student(<span class="keyword">ID</span> <span class="keyword">test</span>, Height <span class="built_in">int</span>, Weight <span class="built_in">int</span>, <span class="keyword">Size</span> <span class="built_in">text</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> Student <span class="keyword">values</span>(<span class="number">1527406002</span>,<span class="number">172</span>,<span class="number">71</span>,<span class="string">'L'</span>);</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> Student;</span><br><span class="line">.exit</span><br></pre></td></tr></table></figure>
+<p>后来还是写了一个<code>db.py</code> 来把数据写到数据库.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">insert</span><span class="params">(id, height, weight, size)</span>:</span></span><br><span class="line">  conn = sqlite3.connect(<span class="string">'student.db'</span>)</span><br><span class="line">  c = conn.cursor()</span><br><span class="line">  c.execute(<span class="string">'insert into Student values(?,?,?,?)'</span>,(id,height,weight,size))</span><br><span class="line">  conn.commit()</span><br><span class="line">  conn.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">  x = [&#123;<span class="string">"id"</span>: <span class="string">"1527406002"</span>, <span class="string">"height"</span>: <span class="number">172</span>, <span class="string">"weight"</span>: <span class="number">71</span>, <span class="string">"size"</span>: <span class="string">"L"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>:<span class="string">"1509401051"</span>,<span class="string">"height"</span>: <span class="number">180</span>,<span class="string">"weight"</span>:<span class="string">"70"</span>,<span class="string">"size"</span>:<span class="string">"XXXL"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>: <span class="number">1527406012</span>, <span class="string">"height"</span>: <span class="number">179</span>, <span class="string">"weight"</span>: <span class="number">84</span>, <span class="string">"size"</span>: <span class="string">"XL"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>: <span class="number">1527406058</span>, <span class="string">"height"</span>: <span class="number">195</span>, <span class="string">"weight"</span>: <span class="number">80</span>, <span class="string">"size"</span>: <span class="string">"XXXL"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"height"</span>: <span class="number">176</span>,<span class="string">"id"</span>: <span class="number">1527406045</span>, <span class="string">"size"</span>: <span class="string">"L"</span>, <span class="string">"weight"</span>: <span class="number">58</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>: <span class="string">"1527406027"</span>, <span class="string">"height"</span>: <span class="number">160</span>, <span class="string">"weight"</span>: <span class="number">75</span>, <span class="string">"size"</span>: <span class="string">"L"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"size"</span>: <span class="string">"XXXL"</span>, <span class="string">"id"</span>: <span class="string">"1527406034"</span>, <span class="string">"weight"</span>: <span class="number">83</span>, <span class="string">"height"</span>: <span class="number">178</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"size"</span>: <span class="string">"S"</span>, <span class="string">"id"</span>: <span class="string">"1527406006"</span>, <span class="string">"weight"</span>: <span class="string">"45"</span>, <span class="string">"height"</span>: <span class="string">"157"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>: <span class="string">"1527406008"</span>, <span class="string">"height"</span>: <span class="number">100</span>, <span class="string">"weight"</span>: <span class="number">60</span>, <span class="string">"size"</span>: <span class="string">"XL"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>: <span class="number">1527406056</span>, <span class="string">"height"</span>: <span class="number">172</span>, <span class="string">"weight"</span>: <span class="number">60</span>, <span class="string">"size"</span>: <span class="string">"L"</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"size"</span>: <span class="string">"L"</span>, <span class="string">"id"</span>: <span class="string">"1527406032"</span>, <span class="string">"weight"</span>: <span class="number">70</span>, <span class="string">"height"</span>: <span class="number">180</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"id"</span>: <span class="number">1527406048</span>, <span class="string">"size"</span>: <span class="string">"M"</span>, <span class="string">"weight"</span>: <span class="number">50</span>, <span class="string">"height"</span>: <span class="number">160</span>&#125;,</span><br><span class="line">    &#123;<span class="string">"size"</span>: <span class="string">"M"</span>, <span class="string">"id"</span>: <span class="number">1527406022</span>, <span class="string">"weight"</span>: <span class="number">49</span>, <span class="string">"height"</span>: <span class="number">159</span>&#125;]</span><br><span class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> x:</span><br><span class="line">    insert(**i)</span><br></pre></td></tr></table></figure>
+<p>然后后台的python是:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#coding:utf-8</span></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask, send_file</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stu</span><span class="params">()</span>:</span></span><br><span class="line">  conn = sqlite3.connect(<span class="string">"student.db"</span>)</span><br><span class="line">  c = conn.cursor()</span><br><span class="line">  c.execute(<span class="string">'select * from Student'</span>)</span><br><span class="line">  x = c.fetchall()</span><br><span class="line">  conn.commit()</span><br><span class="line">  conn.close()</span><br><span class="line">  <span class="comment">#zip: 一一对应合并成list</span></span><br><span class="line">  y = list(map(<span class="keyword">lambda</span> i:dict(zip((<span class="string">'id'</span>,<span class="string">'height'</span>,<span class="string">'weight'</span>,<span class="string">'size'</span>),i)), x))</span><br><span class="line">  <span class="keyword">return</span> json.dumps(y)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/index',methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> send_file(<span class="string">"index.html"</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/style.css', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">style</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> send_file(<span class="string">"styles.css"</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/scripts.js', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scripts</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> send_file(<span class="string">"scripts.js"</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route('/favicon.ico',methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ico</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> send_file(<span class="string">"favicon.ico"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">  app.run(debug=<span class="keyword">True</span>)</span><br></pre></td></tr></table></figure>
+<p>前端的三个代码如下:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- initial-scale = 0.65 interesting --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=0.65"</span> <span class="attr">name</span>=<span class="string">"viewport"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>相似体型计算<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">href</span>=<span class="string">"style.css"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"page"</span> <span class="attr">id</span>=<span class="string">"pageone"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"header"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>最相似体型的计算<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"main"</span> <span class="attr">class</span>=<span class="string">"ui-content"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">table</span> <span class="attr">data-role</span>=<span class="string">"table"</span> <span class="attr">class</span>=<span class="string">"ui-responsive ui-shadow"</span> <span class="attr">id</span>=<span class="string">"Table1"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">thead</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">tr</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>ID<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>Height<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>Weight<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">th</span>&gt;</span>Size<span class="tag">&lt;/<span class="name">th</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">thead</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">tbody</span> <span class="attr">id</span>=<span class="string">"tbody"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;/<span class="name">tbody</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"controlgroup"</span> <span class="attr">data-type</span>=<span class="string">"horizontal"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"get_info"</span>&gt;</span>获取信息<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"compute"</span>&gt;</span>计算结果<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"footer"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span>&gt;</span>Welcome<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>只是一段有意思的内容 来自网络 点击可刷新<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">data-role</span>=<span class="string">"controlgroup"</span> <span class="attr">data-type</span>=<span class="string">"horizontal"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"hitokoto"</span> <span class="attr">onclick</span>=<span class="string">getHitokoto()</span>&gt;</span>一言<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">blockquote</span> <span class="attr">id</span>=<span class="string">"quote"</span>&gt;</span><span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"scripts.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>CSS:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">blockquote</span> &#123; <span class="attribute">border-left</span>: .<span class="number">1em</span> solid gray; <span class="attribute">padding-left</span>: .<span class="number">2em</span>;  &#125;</span><br><span class="line"><span class="selector-tag">tr</span>&#123;</span><br><span class="line">  <span class="attribute">border-bottom</span>: <span class="number">1px</span> solid <span class="number">#d6d6d6</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">tr</span><span class="selector-pseudo">:nth-child(even)</span>&#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#e9e9e9</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">thead</span>&#123;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#e9e9e9</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/*@media screen and (max-width: 500px) &#123;</span></span><br><span class="line"><span class="comment">  table &#123;</span></span><br><span class="line"><span class="comment">    zoom: 0.5;</span></span><br><span class="line"><span class="comment">    max-width: 100%;</span></span><br><span class="line"><span class="comment">    width: 100%;</span></span><br><span class="line"><span class="comment">  &#125;</span></span><br><span class="line"><span class="comment">&#125;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>JS:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">stu = <span class="literal">null</span>;</span><br><span class="line">res = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// function distance(a,b)&#123;</span></span><br><span class="line"><span class="comment">//   return Math.hypot(a.height - b.height, a.weight-b.weight, a.size-b.size);</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> distance = <span class="function">(<span class="params">a,b</span>) =&gt;</span> <span class="built_in">Math</span>.hypot(a.height - b.height, a.weight-b.weight, a.size-b.size);</span><br><span class="line"><span class="comment">// hypot 计算距离</span></span><br><span class="line"></span><br><span class="line">$(<span class="built_in">document</span>).on(<span class="string">"pagecreate"</span>,<span class="string">"#pageone"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  $(<span class="string">"#get_info"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    stu = [];</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">      type: <span class="string">"get"</span>,</span><br><span class="line">      dataType: <span class="string">"json"</span>,</span><br><span class="line">      url: <span class="string">"http://127.0.0.1:5000/"</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">msg</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> str=<span class="string">""</span>;</span><br><span class="line">        <span class="keyword">for</span>(i <span class="keyword">in</span> msg)&#123;</span><br><span class="line">          <span class="comment">//id = "s"+ msg[i].id +"\"</span></span><br><span class="line">          str += <span class="string">"&lt;tr id=\"s"</span>+ msg[i].id +<span class="string">"\"&gt;&lt;td&gt;"</span> + msg[i].id + <span class="string">"&lt;/td&gt;&lt;td&gt;"</span> + msg[i].height + <span class="string">"&lt;/td&gt;&lt;td&gt;"</span> + msg[i].weight + <span class="string">"&lt;/td&gt;&lt;td&gt;"</span> + msg[i].size + <span class="string">"&lt;/td&gt;&lt;/tr&gt;"</span>;</span><br><span class="line">          $(<span class="string">"#tbody"</span>).append(str);</span><br><span class="line">          str = <span class="string">""</span>;</span><br><span class="line">          msg[i].size = [<span class="string">'S'</span>,<span class="string">'M'</span>,<span class="string">'L'</span>,<span class="string">'XL'</span>,<span class="string">'XXL'</span>,<span class="string">'XXXL'</span>].indexOf(msg[i].size.toUpperCase());</span><br><span class="line">          stu.push(msg[i]);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">        <span class="comment">//Remove an event handler.</span></span><br><span class="line">        $(<span class="string">"#get_info"</span>).off();</span><br><span class="line">      &#125;);</span><br><span class="line">    $(<span class="string">"#compute"</span>).on(<span class="string">"click"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(!stu)</span><br><span class="line">        <span class="keyword">return</span> ;</span><br><span class="line">      <span class="keyword">var</span> min = <span class="number">1</span>/<span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span> (ai <span class="keyword">in</span> stu) &#123;</span><br><span class="line">        <span class="keyword">for</span> (bi <span class="keyword">in</span> stu) &#123;</span><br><span class="line">          <span class="keyword">if</span> (ai &gt;= bi)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">          <span class="keyword">var</span> a = stu[ai];</span><br><span class="line">          <span class="keyword">var</span> b = stu[bi];</span><br><span class="line">          <span class="keyword">if</span> (min &gt; distance(a, b))&#123;</span><br><span class="line">            min = distance(a,b);</span><br><span class="line">            res = [a,b];</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//console.log(res);</span></span><br><span class="line">      <span class="comment">//</span></span><br><span class="line">      res.forEach(<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">//jquery .css</span></span><br><span class="line">        $(<span class="string">'#s'</span> + e.id).css(<span class="string">'color'</span>, <span class="string">'red'</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getHitokoto</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  fetch(<span class="string">'https://sslapi.hitokoto.cn/?c=d&amp;encode=text'</span>).then(<span class="function"><span class="params">x</span> =&gt;</span> x.text()).then(<span class="function"><span class="params">x</span> =&gt;</span> <span class="built_in">document</span>.getElementById(<span class="string">'quote'</span>).innerHTML = x)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  getHitokoto();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ajax/" rel="tag"># ajax</a>
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/json/" rel="tag"># json</a>
+          
+            <a href="/tags/sqlite/" rel="tag"># sqlite</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/15/Web(2)-Hitokoto/" rel="next" title="一言(Hitokoto)">
+                <i class="fa fa-chevron-left"></i> 一言(Hitokoto)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/05/Algorithm(2)-shuati/" rel="prev" title="题解-最大最小公倍数-关联矩阵">
+                题解-最大最小公倍数-关联矩阵 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#思路与说明"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x601D;&#x8DEF;&#x4E0E;&#x8BF4;&#x660E;" class="headerlink" title="&#x601D;&#x8DEF;&#x4E0E;&#x8BF4;&#x660E;"></a>&#x601D;&#x8DEF;&#x4E0E;&#x8BF4;&#x660E;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x4EE3;&#x7801;" class="headerlink" title="&#x4EE3;&#x7801;"></a>&#x4EE3;&#x7801;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
