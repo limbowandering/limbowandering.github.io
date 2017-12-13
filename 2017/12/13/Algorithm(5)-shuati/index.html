@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.3">
+
+
+
+
+
+
+  <meta name="keywords" content="PAT题解," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="刷题中; 题源: PAT乙级 1015-德才论 宋代史学家司马光在《资治通鉴》中有一段著名的“德才论”：“是故才德全尽谓之圣人，才德兼亡谓之愚人，德胜才谓之君子，才胜德谓之小人。凡取人之术，苟不得圣人，君子而与之，与其得小人，不若得愚人。” 现给出一批考生的德才分数，请根据司马光的理论给出录取排名。 输入格式： 输入第1行给出3个正整数，分别为：N（&amp;lt;=105），即考生总数；L（&amp;gt;=6">
+<meta name="keywords" content="PAT题解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="题解-德才论-石头剪刀布-数字黑洞-D进制">
+<meta property="og:url" content="http://limbowandering.com/2017/12/13/Algorithm(5)-shuati/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="刷题中; 题源: PAT乙级 1015-德才论 宋代史学家司马光在《资治通鉴》中有一段著名的“德才论”：“是故才德全尽谓之圣人，才德兼亡谓之愚人，德胜才谓之君子，才胜德谓之小人。凡取人之术，苟不得圣人，君子而与之，与其得小人，不若得愚人。” 现给出一批考生的德才分数，请根据司马光的理论给出录取排名。 输入格式： 输入第1行给出3个正整数，分别为：N（&amp;lt;=105），即考生总数；L（&amp;gt;=6">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-12-13T06:56:10.311Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="题解-德才论-石头剪刀布-数字黑洞-D进制">
+<meta name="twitter:description" content="刷题中; 题源: PAT乙级 1015-德才论 宋代史学家司马光在《资治通鉴》中有一段著名的“德才论”：“是故才德全尽谓之圣人，才德兼亡谓之愚人，德胜才谓之君子，才胜德谓之小人。凡取人之术，苟不得圣人，君子而与之，与其得小人，不若得愚人。” 现给出一批考生的德才分数，请根据司马光的理论给出录取排名。 输入格式： 输入第1行给出3个正整数，分别为：N（&amp;lt;=105），即考生总数；L（&amp;gt;=6">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2017/12/13/Algorithm(5)-shuati/"/>
+
+
+
+
+
+  <title>题解-德才论-石头剪刀布-数字黑洞-D进制 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2017/12/13/Algorithm(5)-shuati/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">题解-德才论-石头剪刀布-数字黑洞-D进制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-13T12:00:00+08:00">
+                2017-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Algorithm/" itemprop="url" rel="index">
+                    <span itemprop="name">Algorithm</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>刷题中; 题源: <a href="https://www.patest.cn/contests/pat-b-practise" target="_blank" rel="noopener">PAT乙级</a></p>
+<h2 id="1015-德才论"><a href="#1015-德才论" class="headerlink" title="1015-德才论"></a>1015-德才论</h2><blockquote>
+<p>宋代史学家司马光在《资治通鉴》中有一段著名的“德才论”：“是故才德全尽谓之圣人，才德兼亡谓之愚人，德胜才谓之君子，才胜德谓之小人。凡取人之术，苟不得圣人，君子而与之，与其得小人，不若得愚人。”</p>
+<p>现给出一批考生的德才分数，请根据司马光的理论给出录取排名。</p>
+<p><strong>输入格式：</strong></p>
+<p>输入第1行给出3个正整数，分别为：N（&lt;=105），即考生总数；L（&gt;=60），为录取最低分数线，即德分和才分均不低于L的考生才有资格被考虑录取；H（&lt;100），为优先录取线——德分和才分均不低于此线的被定义为“才德全尽”，此类考生按德才总分从高到低排序；才分不到但德分到线的一类考生属于“德胜才”，也按总分排序，但排在第一类考生之后；德才分均低于H，但是德分不低于才分的考生属于“才德兼亡”但尚有“德胜才”者，按总分排序，但排在第二类考生之后；其他达到最低线L的考生也按总分排序，但排在第三类考生之后。</p>
+<p>随后N行，每行给出一位考生的信息，包括：准考证号、德分、才分，其中准考证号为8位整数，德才分为区间[0, 100]内的整数。数字间以空格分隔。</p>
+<p><strong>输出格式：</strong></p>
+<p>输出第1行首先给出达到最低分数线的考生人数M，随后M行，每行按照输入格式输出一位考生的信息，考生按输入中说明的规则从高到低排序。当某类考生中有多人总分相同时，按其德分降序排列；若德分也并列，则按准考证号的升序输出。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt; 14 60 80</span><br><span class="line">&gt; 10000001 64 90</span><br><span class="line">&gt; 10000002 90 60</span><br><span class="line">&gt; 10000011 85 80</span><br><span class="line">&gt; 10000003 85 80</span><br><span class="line">&gt; 10000004 80 85</span><br><span class="line">&gt; 10000005 82 77</span><br><span class="line">&gt; 10000006 83 76</span><br><span class="line">&gt; 10000007 90 78</span><br><span class="line">&gt; 10000008 75 79</span><br><span class="line">&gt; 10000009 59 90</span><br><span class="line">&gt; 10000010 88 45</span><br><span class="line">&gt; 10000012 80 100</span><br><span class="line">&gt; 10000013 90 99</span><br><span class="line">&gt; 10000014 66 60</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt; 12</span><br><span class="line">&gt; 10000013 90 99</span><br><span class="line">&gt; 10000012 80 100</span><br><span class="line">&gt; 10000003 85 80</span><br><span class="line">&gt; 10000011 85 80</span><br><span class="line">&gt; 10000004 80 85</span><br><span class="line">&gt; 10000007 90 78</span><br><span class="line">&gt; 10000006 83 76</span><br><span class="line">&gt; 10000005 82 77</span><br><span class="line">&gt; 10000002 90 60</span><br><span class="line">&gt; 10000014 66 60</span><br><span class="line">&gt; 10000008 75 79</span><br><span class="line">&gt; 10000001 64 90</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>题解:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> num;</span><br><span class="line">  <span class="keyword">int</span> de;</span><br><span class="line">  <span class="keyword">int</span> cai;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cmp</span><span class="params">(struct node a, struct node b)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>((a.de + a.cai) != (b.de + b.cai))</span><br><span class="line">    <span class="keyword">return</span> (a.de + a.cai) &gt; (b.de + b.cai);</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span>(a.de != b.de)</span><br><span class="line">    <span class="keyword">return</span> a.de &gt; b.de;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> a.num &lt; b.num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> n, low, high;</span><br><span class="line">  <span class="built_in">scanf</span>(<span class="string">"%d %d %d"</span>, &amp;n, &amp;low, &amp;high);</span><br><span class="line">  <span class="built_in">vector</span>&lt;node&gt; v[<span class="number">4</span>];</span><br><span class="line">  node tmp;</span><br><span class="line">  <span class="keyword">int</span> total = n;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d %d %d"</span>, &amp;tmp.num, &amp;tmp.de, &amp;tmp.cai);</span><br><span class="line">    <span class="keyword">if</span>(tmp.de &lt; low || tmp.cai &lt; low)&#123;</span><br><span class="line">      total--;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(tmp.de &gt;= high &amp;&amp; tmp.cai &gt;= high)&#123;</span><br><span class="line">      v[<span class="number">0</span>].push_back(tmp);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(tmp.de &gt;= high &amp;&amp; tmp.cai &lt; high)&#123;</span><br><span class="line">      v[<span class="number">1</span>].push_back(tmp);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(tmp.de &lt; high &amp;&amp; tmp.cai &lt; high &amp;&amp; tmp.de &gt;= tmp.cai)&#123;</span><br><span class="line">      v[<span class="number">2</span>].push_back(tmp);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">      v[<span class="number">3</span>].push_back(tmp);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">"%d\n"</span>, total);</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++)&#123;</span><br><span class="line">    sort(v[i].begin(), v[i].end(), cmp);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; v[i].size(); j++)&#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">"%d %d %d\n"</span>, v[i][j].num, v[i][j].de, v[i][j].cai);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1018-石头剪刀布"><a href="#1018-石头剪刀布" class="headerlink" title="1018-石头剪刀布"></a>1018-石头剪刀布</h2><blockquote>
+<p>现给出两人的交锋记录，请统计双方的胜、平、负次数，并且给出双方分别出什么手势的胜算最大。</p>
+<p><strong>输入格式：</strong></p>
+<p>输入第1行给出正整数N（&lt;=105），即双方交锋的次数。随后N行，每行给出一次交锋的信息，即甲、乙双方同时给出的的手势。C代表“锤子”、J代表“剪刀”、B代表“布”，第1个字母代表甲方，第2个代表乙方，中间有1个空格。</p>
+<p><strong>输出格式：</strong></p>
+<p>输出第1、2行分别给出甲、乙的胜、平、负次数，数字间以1个空格分隔。第3行给出两个字母，分别代表甲、乙获胜次数最多的手势，中间有1个空格。如果解不唯一，则输出按字母序最小的解。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; 10</span><br><span class="line">&gt; C J</span><br><span class="line">&gt; J B</span><br><span class="line">&gt; C B</span><br><span class="line">&gt; B B</span><br><span class="line">&gt; B C</span><br><span class="line">&gt; C C</span><br><span class="line">&gt; C B</span><br><span class="line">&gt; J B</span><br><span class="line">&gt; B C</span><br><span class="line">&gt; J J</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; 5 3 2</span><br><span class="line">&gt; 2 3 5</span><br><span class="line">&gt; B B</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> n;</span><br><span class="line">  <span class="built_in">cin</span> &gt;&gt; n;</span><br><span class="line">  <span class="keyword">int</span> jiawin = <span class="number">0</span>, yiwin = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> jia[<span class="number">3</span>] = &#123;<span class="number">0</span>&#125;, yi[<span class="number">3</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">    <span class="keyword">char</span> s,t ;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; s &gt;&gt; t;</span><br><span class="line">    <span class="keyword">if</span>(s == <span class="string">'B'</span> &amp;&amp; t == <span class="string">'C'</span>)&#123;</span><br><span class="line">      jiawin++;</span><br><span class="line">      jia[<span class="number">0</span>]++;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">'B'</span> &amp;&amp; t == <span class="string">'J'</span>) &#123;</span><br><span class="line">      yiwin++;</span><br><span class="line">      yi[<span class="number">2</span>]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">'C'</span> &amp;&amp; t == <span class="string">'B'</span>) &#123;</span><br><span class="line">      yiwin++;</span><br><span class="line">      yi[<span class="number">0</span>]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">'C'</span> &amp;&amp; t == <span class="string">'J'</span>) &#123;</span><br><span class="line">      jiawin++;</span><br><span class="line">      jia[<span class="number">1</span>]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">'J'</span> &amp;&amp; t == <span class="string">'B'</span>) &#123;</span><br><span class="line">      jiawin++;</span><br><span class="line">      jia[<span class="number">2</span>]++;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (s == <span class="string">'J'</span> &amp;&amp; t == <span class="string">'C'</span>) &#123;</span><br><span class="line">      yiwin++;</span><br><span class="line">      yi[<span class="number">1</span>]++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">cout</span> &lt;&lt; jiawin &lt;&lt; <span class="string">" "</span> &lt;&lt; n - jiawin - yiwin &lt;&lt; <span class="string">" "</span> &lt;&lt; yiwin &lt;&lt; <span class="built_in">endl</span> &lt;&lt; yiwin &lt;&lt;<span class="string">" "</span> &lt;&lt; n -jiawin - yiwin &lt;&lt; <span class="string">" "</span> &lt;&lt; jiawin&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="keyword">int</span> maxjia = jia[<span class="number">0</span>] &gt;= jia[<span class="number">1</span>] ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  maxjia = jia[maxjia] &gt;= jia[<span class="number">2</span>] ? maxjia : <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">int</span> maxyi = yi[<span class="number">0</span>] &gt;= yi[<span class="number">1</span>] ? <span class="number">0</span> : <span class="number">1</span>;</span><br><span class="line">  maxyi = yi[maxyi] &gt;= yi[<span class="number">2</span>] ? maxyi : <span class="number">2</span>;</span><br><span class="line">  <span class="keyword">char</span> str[<span class="number">4</span>] = &#123;<span class="string">"BCJ"</span>&#125;;</span><br><span class="line">  <span class="built_in">cout</span> &lt;&lt; str[maxjia] &lt;&lt; <span class="string">" "</span> &lt;&lt; str[maxyi];</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1019-数字黑洞"><a href="#1019-数字黑洞" class="headerlink" title="1019-数字黑洞"></a>1019-数字黑洞</h2><blockquote>
+<p>给定任一个各位数字不完全相同的4位正整数，如果我们先把4个数字按非递增排序，再按非递减排序，然后用第1个数字减第2个数字，将得到一个新的数字。一直重复这样做，我们很快会停在有“数字黑洞”之称的6174，这个神奇的数字也叫Kaprekar常数。</p>
+<p>例如，我们从6767开始，将得到</p>
+<p>7766 - 6677 = 1089<br>9810 - 0189 = 9621<br>9621 - 1269 = 8352<br>8532 - 2358 = 6174<br>7641 - 1467 = 6174<br>… …</p>
+<p>现给定任意4位正整数，请编写程序演示到达黑洞的过程。</p>
+<p><strong>输入格式：</strong></p>
+<p>输入给出一个(0, 10000)区间内的正整数N。</p>
+<p><strong>输出格式：</strong></p>
+<p>如果N的4位数字全相等，则在一行内输出“N - N = 0000”；否则将计算的每一步在一行内输出，直到6174作为差出现，输出格式见样例。注意每个数字按4位数格式输出。</p>
+<p>输入样例1：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 6767</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>输出样例1：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; 7766 - 6677 = 1089</span><br><span class="line">&gt; 9810 - 0189 = 9621</span><br><span class="line">&gt; 9621 - 1269 = 8352</span><br><span class="line">&gt; 8532 - 2358 = 6174</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>输入样例2：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 2222</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>输出样例2：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 2222 - 2222 = 0000</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>这题要注意如果是0000, 6174 也要输出一次. </p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">char</span> a, <span class="keyword">char</span> b)</span></span>&#123;<span class="keyword">return</span> a &gt; b;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="built_in">string</span> s;</span><br><span class="line">  <span class="built_in">cin</span> &gt;&gt; s;</span><br><span class="line">  s.insert(<span class="number">0</span>, <span class="number">4</span> - s.length(), <span class="string">'0'</span>);</span><br><span class="line">  <span class="keyword">do</span>&#123;</span><br><span class="line">    <span class="built_in">string</span> a = s, b = s;</span><br><span class="line">    sort(a.begin(), a.end(), cmp);</span><br><span class="line">    sort(b.begin(),b.end());</span><br><span class="line">    <span class="keyword">int</span> result = stoi(a) - stoi(b);</span><br><span class="line">    s = to_string(result);</span><br><span class="line">    s.insert(<span class="number">0</span>, <span class="number">4</span> - s.length(), <span class="string">'0'</span>);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="string">" - "</span> &lt;&lt; b &lt;&lt; <span class="string">" = "</span> &lt;&lt; s &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">  &#125;<span class="keyword">while</span>(s != <span class="string">"6174"</span> &amp;&amp; s != <span class="string">"0000"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1022-D进制"><a href="#1022-D进制" class="headerlink" title="1022 D进制"></a>1022 D进制</h2><blockquote>
+<p>输入两个非负10进制整数A和B(&lt;=230-1)，输出A+B的D (1 &lt; D &lt;= 10)进制数。</p>
+<p><strong>输入格式：</strong></p>
+<p>输入在一行中依次给出3个整数A、B和D。</p>
+<p><strong>输出格式：</strong></p>
+<p>输出A+B的D进制数。</p>
+<p>输入样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; 123 456 8</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>&gt;</p>
+<blockquote>
+<p>输出样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; 1103</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a,b,d;</span><br><span class="line">  <span class="built_in">cin</span> &gt;&gt; a &gt;&gt; b &gt;&gt;d;</span><br><span class="line">  <span class="keyword">int</span> t = a + b;</span><br><span class="line">  <span class="comment">//注意边界情况</span></span><br><span class="line">  <span class="keyword">if</span> (t == <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//int s[100];</span></span><br><span class="line">  <span class="keyword">int</span> s[<span class="number">30</span>];</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">while</span>(t != <span class="number">0</span>)&#123;</span><br><span class="line">    s[i++] = t % d;</span><br><span class="line">    t /= d;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> j = i - <span class="number">1</span>; j &gt;= <span class="number">0</span>; j--)&#123;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; s[j];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/PAT题解/" rel="tag"># PAT题解</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/11/Bodybuilding(2)-Sitting-posture/" rel="next" title="保持正确的坐姿与站姿">
+                <i class="fa fa-chevron-left"></i> 保持正确的坐姿与站姿
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">42</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1015-德才论"><span class="nav-number">1.</span> <span class="nav-text"><a href="#1015-&#x5FB7;&#x624D;&#x8BBA;" class="headerlink" title="1015-&#x5FB7;&#x624D;&#x8BBA;"></a>1015-&#x5FB7;&#x624D;&#x8BBA;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1018-石头剪刀布"><span class="nav-number">2.</span> <span class="nav-text"><a href="#1018-&#x77F3;&#x5934;&#x526A;&#x5200;&#x5E03;" class="headerlink" title="1018-&#x77F3;&#x5934;&#x526A;&#x5200;&#x5E03;"></a>1018-&#x77F3;&#x5934;&#x526A;&#x5200;&#x5E03;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1019-数字黑洞"><span class="nav-number">3.</span> <span class="nav-text"><a href="#1019-&#x6570;&#x5B57;&#x9ED1;&#x6D1E;" class="headerlink" title="1019-&#x6570;&#x5B57;&#x9ED1;&#x6D1E;"></a>1019-&#x6570;&#x5B57;&#x9ED1;&#x6D1E;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1022-D进制"><span class="nav-number">4.</span> <span class="nav-text"><a href="#1022-D&#x8FDB;&#x5236;" class="headerlink" title="1022 D&#x8FDB;&#x5236;"></a>1022 D&#x8FDB;&#x5236;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
