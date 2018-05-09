@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.3">
+
+
+
+
+
+
+  <meta name="keywords" content="Canvas,JavaScript," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="总体说明上上周接触的canvas绘图, 觉得很是欢乐, 之前也记得腾讯斗地主的web版本也是整个页面一整个canvas. 而且canvas性能比DOM强多了, 做游戏应该会很有意思. 前两天写的一个躲避球的游戏, 在canvas上随机生成的小球, 随机的颜色, 随机的运动, 带有碰撞检测(原来大学物理是有用的!). 游戏内容就是根据躲避球的时间长短计分. 分数记录在localStorage. 实现">
+<meta name="keywords" content="Canvas,JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Canvas躲避球游戏">
+<meta property="og:url" content="http://limbowandering.com/2018/05/09/Web(4)-canvasBallV1/index.html">
+<meta property="og:site_name" content="竹筏渡海的博客">
+<meta property="og:description" content="总体说明上上周接触的canvas绘图, 觉得很是欢乐, 之前也记得腾讯斗地主的web版本也是整个页面一整个canvas. 而且canvas性能比DOM强多了, 做游戏应该会很有意思. 前两天写的一个躲避球的游戏, 在canvas上随机生成的小球, 随机的颜色, 随机的运动, 带有碰撞检测(原来大学物理是有用的!). 游戏内容就是根据躲避球的时间长短计分. 分数记录在localStorage. 实现">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-09T13:36:47.571Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Canvas躲避球游戏">
+<meta name="twitter:description" content="总体说明上上周接触的canvas绘图, 觉得很是欢乐, 之前也记得腾讯斗地主的web版本也是整个页面一整个canvas. 而且canvas性能比DOM强多了, 做游戏应该会很有意思. 前两天写的一个躲避球的游戏, 在canvas上随机生成的小球, 随机的颜色, 随机的运动, 带有碰撞检测(原来大学物理是有用的!). 游戏内容就是根据躲避球的时间长短计分. 分数记录在localStorage. 实现">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://limbowandering.com/2018/05/09/Web(4)-canvasBallV1/"/>
+
+
+
+
+
+  <title>Canvas躲避球游戏 | 竹筏渡海的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">竹筏渡海的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">あなたの夢は何ですか</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://limbowandering.com/2018/05/09/Web(4)-canvasBallV1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="火山灿灿">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="竹筏渡海的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Canvas躲避球游戏</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-09T00:00:00+08:00">
+                2018-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="总体说明"><a href="#总体说明" class="headerlink" title="总体说明"></a>总体说明</h2><p>上上周接触的canvas绘图, 觉得很是欢乐, 之前也记得腾讯斗地主的web版本也是整个页面一整个canvas. 而且canvas性能比DOM强多了, 做游戏应该会很有意思. 前两天写的一个躲避球的游戏, 在canvas上随机生成的小球, 随机的颜色, 随机的运动, 带有碰撞检测(原来大学物理是有用的!). 游戏内容就是根据躲避球的时间长短计分. 分数记录在localStorage.</p>
+<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><p>在线体验: <a href="https://limbowandering.github.io/web/game/canvasBallV1.html" target="_blank" rel="noopener">https://limbowandering.github.io/web/game/canvasBallV1.html</a></p>
+<p>先说句题外话, 昨天就该写这篇博客的, 但是太累了, 12点才有时间, 就睡了. 果然博客就应该在脑子热的时候写,现在写不动了, 好难受. </p>
+<p>先上代码吧:</p>
+<p>HTML&amp;CSS</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Canvas Game<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">        body &#123;</span></span><br><span class="line"><span class="undefined">            padding: 0;</span></span><br><span class="line"><span class="undefined">            margin: 0;</span></span><br><span class="line"><span class="undefined">            overflow: hidden;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">        #cas &#123;</span></span><br><span class="line"><span class="undefined">            display: block;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="undefined">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./scripts.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">'cas'</span> <span class="attr">width</span>=<span class="string">"1200"</span> <span class="attr">height</span>=<span class="string">"600"</span> <span class="attr">style</span>=<span class="string">"background-color:#000000"</span>&gt;</span>浏览器不支持canvas<span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>然后一点点来分析JavaScript的代码:</p>
+<h3 id="定义Ball类"><a href="#定义Ball类" class="headerlink" title="定义Ball类"></a>定义Ball类</h3><p>JS面向对象, 并不是完全的面向对象, 还是有区别的, 但是定义构造函数和对象的方法还是可以的. </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//let getRandom_v = () =&gt; 10*(parseInt(Math.random() * 5 - 2) || 2);</span></span><br><span class="line"><span class="comment">//两次位运算取否， 得到整数部分 </span></span><br><span class="line"><span class="comment">//上面我还禁止了速度为0的情况，但是还是允许吧 反正随机</span></span><br><span class="line"><span class="keyword">let</span> getRandom_v = <span class="function"><span class="params">()</span> =&gt;</span> <span class="number">20</span>* ~~(<span class="built_in">Math</span>.random() * <span class="number">5</span> - <span class="number">2</span>);</span><br><span class="line"><span class="keyword">let</span> Ball = <span class="function"><span class="keyword">function</span>(<span class="params">x,y,r,color</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">    <span class="comment">//这个速度回头再调整</span></span><br><span class="line">    <span class="comment">//可能还需要重构一下, 用于游戏难度自定义</span></span><br><span class="line">    <span class="keyword">this</span>.vx = getRandom_v();</span><br><span class="line">    <span class="keyword">this</span>.vy = getRandom_v();</span><br><span class="line">    <span class="keyword">this</span>.radius = r;</span><br><span class="line">    <span class="keyword">this</span>.color = color;</span><br><span class="line">&#125;;</span><br><span class="line">Ball.prototype = &#123;</span><br><span class="line">    paint: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        ctx.beginPath();</span><br><span class="line">        ctx.arc(<span class="keyword">this</span>.x, <span class="keyword">this</span>.y, <span class="keyword">this</span>.radius - <span class="number">1</span>, <span class="number">0</span>, <span class="built_in">Math</span>.PI * <span class="number">2</span>);</span><br><span class="line">        ctx.fillStyle = <span class="keyword">this</span>.color;</span><br><span class="line">        ctx.fill();</span><br><span class="line">        <span class="comment">//边框就不画了. 这种canvas像素的操作,碰撞检测时候也是蛮揪心的.</span></span><br><span class="line">        <span class="comment">//ctx.strokeStyle = '#fff';</span></span><br><span class="line">        <span class="comment">//ctx.stroke();</span></span><br><span class="line">    &#125;,</span><br><span class="line">    run: <span class="function"><span class="keyword">function</span>(<span class="params">t</span>)</span>&#123;</span><br><span class="line">        <span class="comment">//目前只是匀速运动, 之前有看到过模拟重力的, 加速度什么的, 原来物理还是有用的</span></span><br><span class="line">        <span class="keyword">this</span>.x += <span class="keyword">this</span>.vx * t;</span><br><span class="line">        <span class="keyword">this</span>.y += <span class="keyword">this</span>.vy * t;</span><br><span class="line">        <span class="comment">//debugger;</span></span><br><span class="line">        <span class="comment">//y/x方向上与边框的碰撞检测</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.y &gt; canvas.height - ballRadius || <span class="keyword">this</span>.y &lt; ballRadius) &#123;</span><br><span class="line">            <span class="keyword">this</span>.y = <span class="keyword">this</span>.y &lt; ballRadius ? ballRadius : (canvas.height - ballRadius);</span><br><span class="line">            <span class="keyword">this</span>.vy = -<span class="keyword">this</span>.vy;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.x &gt; canvas.width - ballRadius || <span class="keyword">this</span>.x &lt; ballRadius) &#123;</span><br><span class="line">            <span class="keyword">this</span>.x = <span class="keyword">this</span>.x &lt; ballRadius ? ballRadius : (canvas.width - ballRadius);</span><br><span class="line">            <span class="keyword">this</span>.vx = -<span class="keyword">this</span>.vx;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//接收的参数t是时间, 每t时间更新一下位置, 重新绘制一下.</span></span><br><span class="line">        <span class="comment">//其实这里有问题, 往下看看requestAnimationFrame是根据显示器刷新频率来决定频率的。</span></span><br><span class="line">        <span class="comment">//所以这个t 不是真的t。。。只是用来更新位置用</span></span><br><span class="line">        <span class="keyword">this</span>.paint();</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>额 写不下去这么多注释了 下面注释少写点</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//window onload的时候更新canvas大小</span></span><br><span class="line">canvas = <span class="built_in">document</span>.getElementById(<span class="string">'cas'</span>);</span><br><span class="line">ctx = canvas.getContext(<span class="string">'2d'</span>);</span><br><span class="line">canvas.width = <span class="built_in">window</span>.innerWidth;</span><br><span class="line">canvas.height = <span class="built_in">window</span>.innerHeight;</span><br><span class="line">ctx.font = <span class="string">"20px Georgia"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//玩家的球</span></span><br><span class="line"><span class="keyword">let</span> myBall = <span class="keyword">new</span> Ball(<span class="number">-500</span>,<span class="number">-400</span>,ballRadius,<span class="string">"white"</span>,<span class="number">0</span>,<span class="number">0</span>);</span><br><span class="line">myBall.vx = <span class="number">0</span>;</span><br><span class="line">myBall.vy = <span class="number">0</span>;</span><br><span class="line">balls.push(myBall);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRandom</span>(<span class="params">a,b</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random() * (b - a) + a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//随机生成40个球</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">40</span>; i++)&#123;</span><br><span class="line">    <span class="keyword">let</span> ball = <span class="keyword">new</span> Ball(getRandom(ballRadius, canvas.width - ballRadius),</span><br><span class="line">                        getRandom(ballRadius, canvas.height - ballRadius),</span><br><span class="line">                        ballRadius, <span class="string">"rgba("</span> + <span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random() * <span class="number">255</span>)</span><br><span class="line">                        + <span class="string">","</span> + <span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random() * <span class="number">255</span>) + <span class="string">","</span> + <span class="built_in">parseInt</span>(<span class="built_in">Math</span>.random() * <span class="number">255</span>) + <span class="string">" , 1)"</span>);</span><br><span class="line"></span><br><span class="line">    balls.push(ball);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="让球动起来"><a href="#让球动起来" class="headerlink" title="让球动起来"></a>让球动起来</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">animate</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    score += <span class="number">1</span>;</span><br><span class="line">    <span class="comment">//score的等会再说</span></span><br><span class="line">    <span class="comment">//先清除整个canvas</span></span><br><span class="line">    ctx.clearRect(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);</span><br><span class="line">    ctx.save();</span><br><span class="line">    ctx.fillStyle = <span class="string">"rgba(255,255,255,0.2)"</span>;</span><br><span class="line">    ctx.fillRect(<span class="number">0</span>,<span class="number">0</span>,canvas.width, canvas.height);</span><br><span class="line">    ctx.restore();</span><br><span class="line">    ctx.clearRect(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height);</span><br><span class="line">	<span class="comment">//检测碰撞</span></span><br><span class="line">    collision();</span><br><span class="line">    <span class="comment">//绘制当前得分</span></span><br><span class="line">    ctx.fillText(<span class="string">'score:'</span>+score.toString(),<span class="number">10</span>,<span class="number">50</span>);</span><br><span class="line">    <span class="comment">//绘制最高分</span></span><br><span class="line">    bestScore();</span><br><span class="line">    <span class="comment">//如果死了 </span></span><br><span class="line">    <span class="keyword">if</span>(balls[<span class="number">0</span>].vx !== <span class="number">0</span> || balls[<span class="number">0</span>].vy !== <span class="number">0</span>)&#123;</span><br><span class="line"></span><br><span class="line">        ctx.fillText(<span class="string">'You died. Your score is '</span>+score.toString(),(canvas.width/<span class="number">2</span>)<span class="number">-100</span>,canvas.height/<span class="number">2</span>);</span><br><span class="line">        drawButton((canvas.width/<span class="number">2</span>)<span class="number">-40</span>,(canvas.height/<span class="number">2</span>)+<span class="number">30</span>,<span class="number">100</span>,<span class="number">35</span>);</span><br><span class="line">        ctx.fillStyle = <span class="string">'#fff'</span>;</span><br><span class="line">        ctx.fillText(<span class="string">'再来一次'</span>,(canvas.width/<span class="number">2</span>)<span class="number">-30</span>,(canvas.height/<span class="number">2</span>)+<span class="number">53</span>);</span><br><span class="line">        updateScores();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//更新球的位置</span></span><br><span class="line">    balls.forEach(<span class="function">(<span class="params">b</span>) =&gt;</span> b.run(t));</span><br><span class="line">    myBall.paint();</span><br><span class="line">    <span class="comment">//用requestAnimationFrame刷新</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="string">"requestAnimationFrame"</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">        requestAnimationFrame(animate);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"webkitRequestAnimationFrame"</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">        webkitRequestAnimationFrame(animate);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"msRequestAnimationFrame"</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">        msRequestAnimationFrame(animate);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"mozRequestAnimationFrame"</span> <span class="keyword">in</span> <span class="built_in">window</span>) &#123;</span><br><span class="line">        mozRequestAnimationFrame(animate);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//webkitRequestAnimationFrame(animate);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="关于RequestAnimationFrame"><a href="#关于RequestAnimationFrame" class="headerlink" title="关于RequestAnimationFrame"></a>关于RequestAnimationFrame</h4><p>顾名思义, 请求动画帧.  对于屏幕刷新率和动画原理就不讲了. </p>
+<p>用setTimeout如果在低端机上的话, 会出现卡顿, 抖动的现象. 这种现象的产生有两个原因:</p>
+<ul>
+<li>setTimeout的执行时间并不是确定的. 在JavaScript中, setTimeout任务被放进了异步队列中, 只有当主线程上的任务执行完以后, 才回去检查队列里的任务是否需要开始执行, 因此setTimeout的实际执行时间一般要比设定时间晚一点.</li>
+<li>受到屏幕分辨率和屏幕尺寸的影响, 不同设备刷新频率可能会不同, 而setTimeout只能设置时间间隔, 和屏幕刷新时间不一定相同.</li>
+</ul>
+<p>所以, setTimeout的执行步调与屏幕的刷新步调不一致就会导致<strong>丢帧</strong>的现象. 这个自己算一下就知道了.</p>
+<p>与setTimeout相比, requestAnimationFrame最大的优势就是由系统来决定回调函数的执行时机. <strong>它能保证回调函数在屏幕每一次的刷新间隔中只被执行一次.</strong> </p>
+<p>而且requestAnimationFrame还有两个优势: </p>
+<ul>
+<li><strong>CPU节能</strong>：使用setTimeout实现的动画，当页面被隐藏或最小化时，setTimeout 仍然在后台执行动画任务，由于此时页面处于不可见或不可用状态，刷新动画是没有意义的，完全是浪费CPU资源。而requestAnimationFrame则完全不同，当页面处理未激活的状态下，该页面的屏幕刷新任务也会被系统暂停，因此跟着系统步伐走的requestAnimationFrame也会停止渲染，当页面被激活时，动画就从上次停留的地方继续执行，有效节省了CPU开销。</li>
+</ul>
+<ul>
+<li><strong>函数节流</strong>：在高频率事件(resize,scroll等)中，为了防止在一个刷新间隔内发生多次函数执行，使用requestAnimationFrame可保证每个刷新间隔内，函数只被执行一次，这样既能保证流畅性，也能更好的节省函数执行的开销。一个刷新间隔内函数执行多次时没有意义的，因为显示器每16.7ms刷新一次，多次绘制并不会在屏幕上体现出来。</li>
+</ul>
+<p>对于有些浏览器尚不支持的情况, 有对应的polyfill在GitHub上.</p>
+<h3 id="碰撞检测"><a href="#碰撞检测" class="headerlink" title="碰撞检测"></a>碰撞检测</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">collision</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; balls.length; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; balls.length; j++) &#123;</span><br><span class="line">            <span class="keyword">let</span> b1 = balls[i], b2 = balls[j];</span><br><span class="line">            <span class="keyword">if</span> (b1 !== b2) &#123;</span><br><span class="line">                <span class="keyword">let</span> rc = <span class="built_in">Math</span>.sqrt(<span class="built_in">Math</span>.pow(b1.x - b2.x, <span class="number">2</span>) + <span class="built_in">Math</span>.pow(b1.y - b2.y, <span class="number">2</span>));</span><br><span class="line">                <span class="comment">//向上舍入</span></span><br><span class="line">                <span class="keyword">if</span> (<span class="built_in">Math</span>.ceil(rc) &lt; (b1.radius + b2.radius + <span class="number">2</span>)) &#123;</span><br><span class="line">                    <span class="keyword">let</span> ax = ((b1.vx - b2.vx) * <span class="built_in">Math</span>.pow((b1.x - b2.x), <span class="number">2</span>) +</span><br><span class="line">                              (b1.vy - b2.vy) * (b1.x - b2.x) * (b1.y - b2.y)) / <span class="built_in">Math</span>.pow(rc, <span class="number">2</span>);</span><br><span class="line">                    <span class="keyword">let</span> ay = ((b1.vy - b2.vy) * <span class="built_in">Math</span>.pow((b1.y - b2.y), <span class="number">2</span>) +</span><br><span class="line">                              (b1.vx - b2.vx) * (b1.x - b2.x) + (b1.y - b2.y)) / <span class="built_in">Math</span>.pow(rc, <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">                    b1.vx = (b1.vx - ax) * collarg;</span><br><span class="line">                    b1.vy = (b1.vy - ay) * collarg;</span><br><span class="line">                    b2.vx = (b2.vx + ax) * collarg;</span><br><span class="line">                    b2.vy = (b2.vy + ay) * collarg;</span><br><span class="line">					</span><br><span class="line">                    <span class="comment">//这里有个坑, 如果仅仅改变速度就完蛋了, 因为再来一帧还有可能继续碰撞</span></span><br><span class="line">                    <span class="comment">//所以需要立马把两个球分开</span></span><br><span class="line">                    <span class="keyword">let</span> clength = ((b1.radius + b2.radius + <span class="number">2</span>) - rc) / <span class="number">2</span>;</span><br><span class="line">                    <span class="keyword">let</span> cx = clength * (b1.x - b2.x) / rc;</span><br><span class="line">                    <span class="keyword">let</span> cy = clength * (b1.y - b2.y) / rc;</span><br><span class="line">                    b1.x = b1.x + cx;</span><br><span class="line">                    b1.y = b1.y + cy;</span><br><span class="line">                    b2.x = b2.x - cx;</span><br><span class="line">                    b2.y = b2.y - cy;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="计分"><a href="#计分" class="headerlink" title="计分"></a>计分</h3><p>用到的都是localStorage最基本的setItem, getItem, length属性. 不作说明了.</p>
+<p>完整的代码请移步: <a href="https://github.com/limbowandering/web_demos/tree/master/4_canvasBallV1" target="_blank" rel="noopener">GitHub</a> </p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>对于canvas, SVG, WebGL, 都觉得很有趣, 接下来还会再玩玩. </p>
+<p>对于本游戏, 目前的JS代码加上注释才150行, 就感觉有点乱, 对于设计模式啊, 面向对象的设计, 还得琢磨. 而且对于在这个游戏, 我发现能做的太多了! 目前是躲避, 可以改成吃豆豆的… 还可以是双人的吃豆豆, 加上websocket通信, 对于延迟和检验什么的, 做了再说吧. 还要把界面做的更友好的一点, 第一次进入做一个游戏新手教程, 游戏还应该能设置难度, 还有自定义球的速度和数量. 而且还能加入音效. 接着慢慢做吧.</p>
+<p>一些参考链接</p>
+<p><a href="http://web.jobbole.com/91578/" target="_blank" rel="noopener">伯乐在线</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Canvas/" rel="tag"># Canvas</a>
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/26/CS(3)-arduino1/" rel="next" title="用arduino自制电子琴">
+                <i class="fa fa-chevron-left"></i> 用arduino自制电子琴
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.jpg"
+                alt="火山灿灿" />
+            
+              <p class="site-author-name" itemprop="name">火山灿灿</p>
+              <p class="site-description motion-element" itemprop="description">精于心 简于形</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/limbowandering" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://twitter.com/cancan_z98" target="_blank" title="Twitter">
+                    
+                      <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="/404.html" title="404" target="_blank">404</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ibilidi.cn/" title="AnthonyAn,一个有梦想的开发者" target="_blank">AnthonyAn,一个有梦想的开发者</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.ikaroscc.cn/" title="Ikaros.花开:二进制的男人" target="_blank">Ikaros.花开:二进制的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.mythsman.com/" title="谜一样的男人" target="_blank">谜一样的男人</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://docle.github.io" title="Docle" target="_blank">Docle</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.liuchuo.net" title="柳婼 の blog" target="_blank">柳婼 の blog</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://transformerswsz.github.io/" title="无敌的阿忠" target="_blank">无敌的阿忠</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://hyrious.github.io" title="hyrious" target="_blank">hyrious</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://dcc.cat" title="DCC" target="_blank">DCC</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://janzenban.github.io" title="一个有故事的程序员" target="_blank">一个有故事的程序员</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#总体说明"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x603B;&#x4F53;&#x8BF4;&#x660E;" class="headerlink" title="&#x603B;&#x4F53;&#x8BF4;&#x660E;"></a>&#x603B;&#x4F53;&#x8BF4;&#x660E;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现方式"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x5B9E;&#x73B0;&#x65B9;&#x5F0F;" class="headerlink" title="&#x5B9E;&#x73B0;&#x65B9;&#x5F0F;"></a>&#x5B9E;&#x73B0;&#x65B9;&#x5F0F;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义Ball类"><span class="nav-number">2.1.</span> <span class="nav-text"><a href="#&#x5B9A;&#x4E49;Ball&#x7C7B;" class="headerlink" title="&#x5B9A;&#x4E49;Ball&#x7C7B;"></a>&#x5B9A;&#x4E49;Ball&#x7C7B;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">2.2.</span> <span class="nav-text"><a href="#&#x521D;&#x59CB;&#x5316;" class="headerlink" title="&#x521D;&#x59CB;&#x5316;"></a>&#x521D;&#x59CB;&#x5316;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#让球动起来"><span class="nav-number">2.3.</span> <span class="nav-text"><a href="#&#x8BA9;&#x7403;&#x52A8;&#x8D77;&#x6765;" class="headerlink" title="&#x8BA9;&#x7403;&#x52A8;&#x8D77;&#x6765;"></a>&#x8BA9;&#x7403;&#x52A8;&#x8D77;&#x6765;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于RequestAnimationFrame"><span class="nav-number">2.3.1.</span> <span class="nav-text"><a href="#&#x5173;&#x4E8E;RequestAnimationFrame" class="headerlink" title="&#x5173;&#x4E8E;RequestAnimationFrame"></a>&#x5173;&#x4E8E;RequestAnimationFrame</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#碰撞检测"><span class="nav-number">2.4.</span> <span class="nav-text"><a href="#&#x78B0;&#x649E;&#x68C0;&#x6D4B;" class="headerlink" title="&#x78B0;&#x649E;&#x68C0;&#x6D4B;"></a>&#x78B0;&#x649E;&#x68C0;&#x6D4B;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计分"><span class="nav-number">2.5.</span> <span class="nav-text"><a href="#&#x8BA1;&#x5206;" class="headerlink" title="&#x8BA1;&#x5206;"></a>&#x8BA1;&#x5206;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最后"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x6700;&#x540E;" class="headerlink" title="&#x6700;&#x540E;"></a>&#x6700;&#x540E;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">火山灿灿</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
